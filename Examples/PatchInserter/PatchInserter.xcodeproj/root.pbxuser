@@ -1,0 +1,221 @@
+// !$*UTF8*$!
+{
+	08FB7793FE84155DC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeBuildStyle = 014CEA460018CE2711CA2923 /* Debug */;
+		activeExecutable = 61E399E20957544500497A2A /* PatchInserter */;
+		activeTarget = 8DD76F620486A84900D96B5E /* PatchInserter */;
+		addToTargets = (
+			8DD76F620486A84900D96B5E /* PatchInserter */,
+		);
+		breakpoints = (
+			61DBD53A09585B0300C63637 /* PatchLoader.cpp:824 */,
+			613E7186095887F600547E99 /* RosettaPatching.c:626 */,
+			613E71980959B1AA00547E99 /* main.c:14 */,
+			613E71A10959F4C800547E99 /* PatchLoader.cpp:624 */,
+			61C930B4095A0CCA00835D4B /* PatchLoader.cpp:703 */,
+		);
+		breakpointsGroup = 61E399F90957545B00497A2A /* XCBreakpointsBucket */;
+		codeSenseManager = 61E399F80957545B00497A2A /* Code sense */;
+		executables = (
+			61E399E20957544500497A2A /* PatchInserter */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					154.5835,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					243,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 156896348;
+			PBXWorkspaceStateSaveDate = 156896348;
+		};
+		sourceControlManager = 61E399F70957545B00497A2A /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	08FB7796FE84155DC02AAC07 /* main.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {660, 504}}";
+			sepNavSelRange = "{253, 0}";
+			sepNavVisRect = "{{0, 0}, {660, 351}}";
+		};
+	};
+	613E7184095887F600547E99 /* RosettaPatching.c */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.c;
+		name = RosettaPatching.c;
+		path = "/Volumes/Data/development/MacAdmin 386/Control/MacAdminControl/RosettaPatching.c";
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {704, 15190}}";
+			sepNavSelRange = "{42091, 0}";
+			sepNavVisRect = "{{0, 12802}, {660, 351}}";
+		};
+	};
+	613E7186095887F600547E99 /* RosettaPatching.c:626 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 613E7184095887F600547E99 /* RosettaPatching.c */;
+		functionName = "__rosetta_allocate_tables()";
+		hitCount = 1;
+		lineNumber = 626;
+		modificationTime = 156902653.964783;
+		state = 1;
+	};
+	613E71980959B1AA00547E99 /* main.c:14 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 08FB7796FE84155DC02AAC07 /* main.c */;
+		functionName = "main()";
+		hitCount = 1;
+		lineNumber = 14;
+		modificationTime = 156902655.94932;
+		state = 1;
+	};
+	613E71A10959F4C800547E99 /* PatchLoader.cpp:624 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 61DBD53809585B0300C63637 /* PatchLoader.cpp */;
+		functionName = "RosettaPatchLoader::LoadPatchCode()";
+		hitCount = 1;
+		lineNumber = 624;
+		modificationTime = 156902659.345452;
+		state = 1;
+	};
+	61C930B4095A0CCA00835D4B /* PatchLoader.cpp:703 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 61DBD53809585B0300C63637 /* PatchLoader.cpp */;
+		functionName = "RosettaPatchLoader::rosetta_thread_setup()";
+		hitCount = 1;
+		lineNumber = 703;
+		modificationTime = 156902661.320158;
+		state = 1;
+	};
+	61DBD53809585B0300C63637 /* PatchLoader.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = PatchLoader.cpp;
+		path = "/Volumes/Data/development/MacAdmin 386/Control/MacAdminControl/PatchLoader.cpp";
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {710, 18298}}";
+			sepNavSelRange = "{20793, 0}";
+			sepNavVisRect = "{{0, 11340}, {660, 351}}";
+		};
+	};
+	61DBD53A09585B0300C63637 /* PatchLoader.cpp:824 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 61DBD53809585B0300C63637 /* PatchLoader.cpp */;
+		functionName = "RosettaPatchLoader::end_patch_thread()";
+		hitCount = 1;
+		lineNumber = 824;
+		modificationTime = 156902662.379278;
+		state = 1;
+	};
+	61E399E20957544500497A2A /* PatchInserter */ = {
+		isa = PBXExecutable;
+		activeArgIndex = 0;
+		activeArgIndices = (
+			YES,
+			YES,
+		);
+		argumentStrings = (
+			7010,
+			/Developer/build/Development/PatchTest_Print.control,
+		);
+		autoAttachOnCrash = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 3;
+		libgmallocEnabled = 0;
+		name = PatchInserter;
+		savedGlobals = {
+		};
+		sourceDirectories = (
+		);
+	};
+	61E399F70957545B00497A2A /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+		scmType = "";
+	};
+	61E399F80957545B00497A2A /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	61E399F90957545B00497A2A /* XCBreakpointsBucket */ = {
+		isa = XCBreakpointsBucket;
+		name = "Project Breakpoints";
+		objects = (
+			61DBD53A09585B0300C63637 /* PatchLoader.cpp:824 */,
+			613E7186095887F600547E99 /* RosettaPatching.c:626 */,
+			613E71980959B1AA00547E99 /* main.c:14 */,
+			613E71A10959F4C800547E99 /* PatchLoader.cpp:624 */,
+		);
+	};
+	8DD76F620486A84900D96B5E /* PatchInserter */ = {
+		activeExec = 0;
+		executables = (
+			61E399E20957544500497A2A /* PatchInserter */,
+		);
+	};
+}

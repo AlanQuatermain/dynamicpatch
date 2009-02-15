@@ -1,0 +1,168 @@
+// !$*UTF8*$!
+{
+	0867D690FE84028FC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Release;
+		activeTarget = 8D07F2BC0486CC7A007CD1D0 /* Standalone Framework */;
+		addToTargets = (
+			3823DA5A09D494090006C9C5 /* Builtin Framework */,
+			8D07F2BC0486CC7A007CD1D0 /* Standalone Framework */,
+		);
+		breakpoints = (
+			3823DCDC09E19D6C0006C9C5 /* Injector.cpp:209 */,
+			3823DCDF09E1A04F0006C9C5 /* Injector.cpp:363 */,
+			3823DD0609E1AB750006C9C5 /* Injector.cpp:336 */,
+		);
+		codeSenseManager = 3842ED1309D3570F0024FDC8 /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					460,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					200,
+					280,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 184544583;
+			PBXWorkspaceStateSaveDate = 184544583;
+		};
+		sourceControlManager = 3842ED1209D3570F0024FDC8 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	3823DA5A09D494090006C9C5 /* Builtin Framework */ = {
+		activeExec = 0;
+	};
+	3823DA8309D495730006C9C5 /* atomic.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {820, 943}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {820, 943}}";
+			sepNavWindowFrame = "{{1615, 179}, {859, 1016}}";
+		};
+	};
+	3823DB3009DDD0B40006C9C5 /* Injection.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {673, 2702}}";
+			sepNavSelRange = "{6645, 0}";
+			sepNavVisRect = "{{0, 2055}, {673, 647}}";
+			sepNavWindowFrame = "{{15, 97}, {712, 776}}";
+		};
+	};
+	3823DB3209DDD0B40006C9C5 /* Lookup.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {673, 2520}}";
+			sepNavSelRange = "{1182, 0}";
+			sepNavVisRect = "{{0, 0}, {673, 647}}";
+			sepNavWindowFrame = "{{477, 100}, {712, 776}}";
+		};
+	};
+	3823DB3309DDD0B40006C9C5 /* Patching.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {673, 2856}}";
+			sepNavSelRange = "{3328, 0}";
+			sepNavVisRect = "{{0, 1153}, {673, 647}}";
+			sepNavWindowFrame = "{{428, 102}, {712, 776}}";
+		};
+	};
+	3823DBE509DF04F60006C9C5 /* DPAPI.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {795, 573}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {795, 573}}";
+			sepNavWindowFrame = "{{38, 150}, {834, 702}}";
+		};
+	};
+	3823DCDC09E19D6C0006C9C5 /* Injector.cpp:209 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 3823DB4709DDD10A0006C9C5 /* Injector.cpp */;
+		functionName = "Injector::Injector()";
+		hitCount = 1;
+		lineNumber = 209;
+		modificationTime = 165789084.30629;
+		state = 1;
+	};
+	3823DCDF09E1A04F0006C9C5 /* Injector.cpp:363 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 3823DB4709DDD10A0006C9C5 /* Injector.cpp */;
+		functionName = "Injector::StartThreadInTarget()";
+		hitCount = 1;
+		lineNumber = 363;
+		modificationTime = 165789084.357624;
+		state = 1;
+	};
+	3823DD0609E1AB750006C9C5 /* Injector.cpp:336 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 3823DB4709DDD10A0006C9C5 /* Injector.cpp */;
+		functionName = "Injector::StartThreadInTarget()";
+		hitCount = 1;
+		lineNumber = 336;
+		modificationTime = 165789084.40161;
+		state = 1;
+	};
+	3842ED1209D3570F0024FDC8 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+		scmType = "";
+	};
+	3842ED1309D3570F0024FDC8 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	8D07F2BC0486CC7A007CD1D0 /* Standalone Framework */ = {
+		activeExec = 0;
+	};
+}

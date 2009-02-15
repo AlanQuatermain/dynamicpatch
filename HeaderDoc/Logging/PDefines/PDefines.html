@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html><head>
+    <title>#defines</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <meta name="generator" content="HeaderDoc">
+<style type="text/css"><!--a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;}--></style></head><body bgcolor="#ffffff">
+<h1><font face="Geneva,Arial,Helvtica">#defines</font></h1><br>
+<hr><!-- headerDoc=macro;  uid=//apple_ref/c/macro/DEBUGLOG;  name=DEBUGLOG -->
+<a name="//apple_ref/c/macro/DEBUGLOG"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DEBUGLOG">DEBUGLOG</a></h3>
+</td></tr></table><hr><dl></dl><p>Convenience for accessing the <!-- a logicalPath="//apple_ref/c/func/DebugLog" -->DebugLog <!-- /a --> function.</p>
+<blockquote><pre>#define <!-- a logicalPath="//apple_ref/c/instm/DEBUGLOG //apple_ref/c/clm/DEBUGLOG //apple_ref/c/intfcm/DEBUGLOG //apple_ref/c/func/DEBUGLOG //apple_ref/c/ftmplt/DEBUGLOG //apple_ref/c/defn/DEBUGLOG //apple_ref/c/macro/DEBUGLOG" --><font class="function">DEBUGLOG</font><!-- /a -->(
+    <font class="var">format</font>, <!-- a logicalPath="//apple_ref/c/cl/args //apple_ref/c/cl/args //apple_ref/c/tdef/args //apple_ref/c/tag/args //apple_ref/c/econst/args //apple_ref/c/struct/args //apple_ref/c/clconst/args" --><font class="type">args</font><!-- /a -->... ) <!-- a logicalPath="//apple_ref/c/instm/DebugLogMacro //apple_ref/c/clm/DebugLogMacro //apple_ref/c/intfcm/DebugLogMacro //apple_ref/c/func/DebugLogMacro //apple_ref/c/ftmplt/DebugLogMacro //apple_ref/c/defn/DebugLogMacro //apple_ref/c/macro/DebugLogMacro" --><font class="function">DebugLogMacro</font><!-- /a -->(
+    <font class="var">__FILE__</font>, <font class="var">__LINE__</font>, <font class="var">format</font>, ##<font class="var">args</font> ) </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>format</i></code></dt><dd>A printf-style format string.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>It is advised that this macro be used to implement debug logging, as it
+will embed file and line number information into the debug log.</p>
+</dl>
+<p>(Last Updated November 06, 2006)
+</p></body></html>

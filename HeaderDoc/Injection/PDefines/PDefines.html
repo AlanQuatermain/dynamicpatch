@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html><head>
+    <title>#defines</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <meta name="generator" content="HeaderDoc">
+<style type="text/css"><!--a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;}--></style></head><body bgcolor="#ffffff">
+<h1><font face="Geneva,Arial,Helvtica">#defines</font></h1><br>
+<hr><!-- headerDoc=macro;  uid=//apple_ref/c/macro/kGetPatchDetailsFunctionName;  name=kGetPatchDetailsFunctionName -->
+<a name="//apple_ref/c/macro/kGetPatchDetailsFunctionName"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="kGetPatchDetailsFunctionName">kGetPatchDetailsFunctionName</a></h3>
+</td></tr></table><hr><dl></dl><p>The name of the Rosetta 'Get Patch Details' function.</p>
+<blockquote><pre>#define <!-- a logicalPath="//apple_ref/c/cl/kGetPatchDetailsFunctionName //apple_ref/c/cl/kGetPatchDetailsFunctionName //apple_ref/c/tdef/kGetPatchDetailsFunctionName //apple_ref/c/tag/kGetPatchDetailsFunctionName //apple_ref/c/econst/kGetPatchDetailsFunctionName //apple_ref/c/struct/kGetPatchDetailsFunctionName //apple_ref/c/clconst/kGetPatchDetailsFunctionName" --><font class="type">kGetPatchDetailsFunctionName</font><!-- /a --> "<!-- a logicalPath="//apple_ref/c/cl/GetPatchDetails //apple_ref/c/cl/GetPatchDetails //apple_ref/c/tdef/GetPatchDetails //apple_ref/c/tag/GetPatchDetails //apple_ref/c/econst/GetPatchDetails //apple_ref/c/struct/GetPatchDetails //apple_ref/c/clconst/GetPatchDetails" --><font class="type">GetPatchDetails</font><!-- /a -->" </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>As with <code>kStartFunctionName</code>, this is currently
+hard-coded, but can be read from a bundle's info.plist with a
+few changes to the code.
+ </p>
+</dl>
+<hr><!-- headerDoc=macro;  uid=//apple_ref/c/macro/kLinkPatchBundleSymbolName;  name=kLinkPatchBundleSymbolName -->
+<a name="//apple_ref/c/macro/kLinkPatchBundleSymbolName"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="kLinkPatchBundleSymbolName">kLinkPatchBundleSymbolName</a></h3>
+</td></tr></table><hr><dl></dl><p>The assembler-style symbol name of the 'Link Patches' function.</p>
+<blockquote><pre>#define <!-- a logicalPath="//apple_ref/c/cl/kLinkPatchBundleSymbolName //apple_ref/c/cl/kLinkPatchBundleSymbolName //apple_ref/c/tdef/kLinkPatchBundleSymbolName //apple_ref/c/tag/kLinkPatchBundleSymbolName //apple_ref/c/econst/kLinkPatchBundleSymbolName //apple_ref/c/struct/kLinkPatchBundleSymbolName //apple_ref/c/clconst/kLinkPatchBundleSymbolName" --><font class="type">kLinkPatchBundleSymbolName</font><!-- /a --> "<!-- a logicalPath="//apple_ref/c/cl/_LinkPatches //apple_ref/c/cl/_LinkPatches //apple_ref/c/tdef/_LinkPatches //apple_ref/c/tag/_LinkPatches //apple_ref/c/econst/_LinkPatches //apple_ref/c/struct/_LinkPatches //apple_ref/c/clconst/_LinkPatches" --><font class="type">_LinkPatches</font><!-- /a -->" </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This is an actual assembler symbol name, because unlike
+the others, passed to <code>CFBundleGetAddressOfSymbol()</code>,
+this one is passed to <code>NSLookupSymbolInModule</code>,
+which requires the leading underscore to be included.
+ </p>
+</dl>
+<hr><!-- headerDoc=macro;  uid=//apple_ref/c/macro/kStartFunctionName;  name=kStartFunctionName -->
+<a name="//apple_ref/c/macro/kStartFunctionName"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="kStartFunctionName">kStartFunctionName</a></h3>
+</td></tr></table><hr><dl></dl><p>The name of the bundle startup function. </p>
+<blockquote><pre>#define <!-- a logicalPath="//apple_ref/c/cl/kStartFunctionName //apple_ref/c/cl/kStartFunctionName //apple_ref/c/tdef/kStartFunctionName //apple_ref/c/tag/kStartFunctionName //apple_ref/c/econst/kStartFunctionName //apple_ref/c/struct/kStartFunctionName //apple_ref/c/clconst/kStartFunctionName" --><font class="type">kStartFunctionName</font><!-- /a --> "<!-- a logicalPath="//apple_ref/c/cl/PatchMain //apple_ref/c/cl/PatchMain //apple_ref/c/tdef/PatchMain //apple_ref/c/tag/PatchMain //apple_ref/c/econst/PatchMain //apple_ref/c/struct/PatchMain //apple_ref/c/clconst/PatchMain" --><font class="type">PatchMain</font><!-- /a -->" </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This is a hard-coded value at present, but you could
+always have the name read from the bundle's Info.plist
+if you wanted. That would need a change to the underlying
+code.
+ </p>
+</dl>
+<hr><!-- headerDoc=macro;  uid=//apple_ref/c/macro/kWillPatchFunctionName;  name=kWillPatchFunctionName -->
+<a name="//apple_ref/c/macro/kWillPatchFunctionName"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="kWillPatchFunctionName">kWillPatchFunctionName</a></h3>
+</td></tr></table><hr><dl></dl><p>The name of the Rosetta 'Will Patch Application' function.</p>
+<blockquote><pre>#define <!-- a logicalPath="//apple_ref/c/cl/kWillPatchFunctionName //apple_ref/c/cl/kWillPatchFunctionName //apple_ref/c/tdef/kWillPatchFunctionName //apple_ref/c/tag/kWillPatchFunctionName //apple_ref/c/econst/kWillPatchFunctionName //apple_ref/c/struct/kWillPatchFunctionName //apple_ref/c/clconst/kWillPatchFunctionName" --><font class="type">kWillPatchFunctionName</font><!-- /a --> "<!-- a logicalPath="//apple_ref/c/cl/WillPatchApplication //apple_ref/c/cl/WillPatchApplication //apple_ref/c/tdef/WillPatchApplication //apple_ref/c/tag/WillPatchApplication //apple_ref/c/econst/WillPatchApplication //apple_ref/c/struct/WillPatchApplication //apple_ref/c/clconst/WillPatchApplication" --><font class="type">WillPatchApplication</font><!-- /a -->" </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>As with <code>kStartFunctionName</code>, this is currently
+hard-coded, but can be read from a bundle's info.plist with a
+few changes to the code.
+ </p>
+</dl>
+<p><p>&#169; 2003-2006 Jim Dovey. Some Rights Reserved.
+ (Last Updated November 06, 2006)
+</p></body></html>

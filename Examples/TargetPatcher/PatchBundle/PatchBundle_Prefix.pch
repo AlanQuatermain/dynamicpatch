@@ -1,0 +1,5 @@
+//
+// Prefix header for all source files of the 'PatchBundle' target in the 'PatchBundle' project.
+//
+
+#include <CoreFoundation/CoreFoundation.h>

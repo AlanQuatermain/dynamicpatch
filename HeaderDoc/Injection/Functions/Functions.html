@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html><head>
+    <title>Functions</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <meta name="generator" content="HeaderDoc">
+<style type="text/css"><!--a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;}--></style></head><body bgcolor="#ffffff">
+<h1><font face="Geneva,Arial,Helvtica">Functions</font></h1><br>
+<a name="HeaderDoc_functions"></a>
+<dl>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/DPPatchRemoteTask" target="doc">DPPatchRemoteTask</a></tt></dt>
+<dd>Starts a thread in the given mach task.
+</dd>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/DPPatchRemoteTask;  name=DPPatchRemoteTask -->
+<a name="//apple_ref/c/func/DPPatchRemoteTask"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DPPatchRemoteTask">DPPatchRemoteTask</a></h3>
+</td></tr></table><hr><dl></dl><p>Starts a thread in the given mach task.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/DPPatchRemoteTask //apple_ref/c/clm/DPPatchRemoteTask //apple_ref/c/intfcm/DPPatchRemoteTask //apple_ref/c/func/DPPatchRemoteTask //apple_ref/c/ftmplt/DPPatchRemoteTask //apple_ref/c/defn/DPPatchRemoteTask //apple_ref/c/macro/DPPatchRemoteTask" --><font class="function">DPPatchRemoteTask</font><!-- /a -->(
+    <!-- a logicalPath="//apple_ref/c/cl/pid_t //apple_ref/c/cl/pid_t //apple_ref/c/tdef/pid_t //apple_ref/c/tag/pid_t //apple_ref/c/econst/pid_t //apple_ref/c/struct/pid_t //apple_ref/c/clconst/pid_t" --><font class="type">pid_t</font><!-- /a --> <font class="param">pid</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">path_to_patch</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>pid</i></code></dt><dd>The process ID of the process to patch.</dd>
+<dt><code><i>path_to_patch</i></code></dt><dd>The path to a specific single patch bundle to
+load. Can be NULL.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>Calling this function will begin a new thread in the given
+task, which will then proceed to load one or more patch
+bundles. If the second (optional) parameter is NULL, then all
+bundles in the ControlPlugins folder will be loaded. Otherwise,
+the bundle at the supplied path will be loaded.
+<br><br>
+For processes running via Rosetta translation, the method is
+slightly different. Instead of inserting some startup code in
+a new thread, then making that new thread do the work of
+loading and installing the patches, the injection process must
+do most of the work. So, the injection process will load each
+patch in turn, call its check function to see if it should
+load into the target process, and if so, gets a list of
+functions to patch. It then sets up patch blocks for these,
+with branch targets initially pointing to a stub helper
+function which will load the relevant bundle & libraries. It
+then creates a new thread (which will run in the host
+architecture) and pass it a list of these patches. That
+routine will then atomically patch these functions before
+exiting.
+</p>
+</dl>
+<p><p>&#169; 2003-2006 Jim Dovey. Some Rights Reserved.
+ (Last Updated November 06, 2006)
+</p></body></html>

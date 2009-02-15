@@ -1,0 +1,39 @@
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf330
+{\fonttbl\f0\fswiss\fcharset77 Helvetica-Bold;\f1\fswiss\fcharset77 Helvetica;\f2\fswiss\fcharset77 Helvetica-Oblique;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+\margl1440\margr1440\vieww10640\viewh12860\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\b\fs36 \cf0 About the Examples\
+
+\fs24 \cf0 \
+NB:
+\f1\b0  These projects expect the DynamicPatch framework to be installed in the /Library/Frameworks folder. I've not (yet) looked to see what happens if I move it to my home folder (i.e. whether the IDE finds it there, or whether the compiler finds it there), but I know that building against an SDK causes problems, because it's in the 
+\f2\i real
+\f1\i0  folder, not the SDK one. To remedy that, my simplistic method is to put a symlink to it inside the 10.4u SDK, which will require the creation of the Library and Frameworks folders too.
+\f0\b\fs36 \cf0 \
+
+\f1\b0\fs24 \
+
+\f0\b\fs28 iPatchTester\
+
+\f1\b0\fs24 This project contains some simple code which patches itself. There is a target function, which takes an integer, adds 10, and returns the new value. The patch function increments the input value and calls the original function.\
+The application will call the each function once independantly, then will patch the target and call it again.\
+\
+
+\f0\b\fs28 NativeInjectTester\
+
+\f1\b0\fs24 This project builds a patch bundle with a very simple PatchMain() implementation. It simply puts up an alert dialog when that function is called, and then lets itself be unloaded. It's designed to help test the injection procedure. If you inject this into an app, that app should show the dialog.\
+NB: This bundle does NOT implement the Rosetta inject/patch environment, since it doesn't actually patch functions itself (and the Rosetta code doesn't provide an injection-only API).\
+\
+
+\f0\b\fs28 PatchInserter
+\f1\b0\fs24 \
+This project implements a command-line utility for applying a patch bundle to a running application. It takes two arguments: a numeric process id, and the path to a patch bundle. The path should be fully-qualified. It will then inject that bundle into the target process, if it has permission. Used in conjunction with NativeInjectTester, this can be used to determine whether the injection process is working.\
+\
+
+\f0\b\fs28 \cf0 PatchTargetApp\
+TargetPatcher\
+
+\f1\b0\fs24 \cf2 These are incomplete at present. Please Stand By.}

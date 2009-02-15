@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html><head>
+    <title>Functions</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <meta name="generator" content="HeaderDoc">
+<style type="text/css"><!--a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;}--></style></head><body bgcolor="#ffffff">
+<h1><font face="Geneva,Arial,Helvtica">Functions</font></h1><br>
+<a name="HeaderDoc_functions"></a>
+<dl>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/ApplicationName" target="doc">ApplicationName</a></tt></dt>
+<dd>Get the name of the current application.
+</dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/DebugLog" target="doc">DebugLog</a></tt></dt>
+<dd>Log information useful when debugging.
+</dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/DebugLogMacro" target="doc">DebugLogMacro</a></tt></dt>
+<dd></dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/FileFromFQPN" target="doc">FileFromFQPN</a></tt></dt>
+<dd>Get the last path component of an FQPN.
+</dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/InitLogs" target="doc">InitLogs</a></tt></dt>
+<dd>Initialize the logging subsystem.
+</dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/LogEmergency" target="doc">LogEmergency</a></tt></dt>
+<dd>Log information about a critical error.
+</dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/LogError" target="doc">LogError</a></tt></dt>
+<dd>Log information about an error.
+</dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/LogMessage" target="doc">LogMessage</a></tt></dt>
+<dd>Log general operational information.
+</dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/NamedLog" target="doc">NamedLog</a></tt></dt>
+<dd>Log information to a specifically-named logfile.
+</dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/vDebugLog" target="doc">vDebugLog</a></tt></dt>
+<dd></dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/vLogEmergency" target="doc">vLogEmergency</a></tt></dt>
+<dd></dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/vLogError" target="doc">vLogError</a></tt></dt>
+<dd></dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/vLogMessage" target="doc">vLogMessage</a></tt></dt>
+<dd></dd>
+<dt><tt><a href="Functions.html#//apple_ref/c/func/vNamedLog" target="doc">vNamedLog</a></tt></dt>
+<dd></dd>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/ApplicationName;  name=ApplicationName -->
+<a name="//apple_ref/c/func/ApplicationName"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="ApplicationName">ApplicationName</a></h3>
+</td></tr></table><hr><dl></dl><p>Get the name of the current application.
+</p>
+<blockquote><pre> <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/ApplicationName //apple_ref/c/clm/ApplicationName //apple_ref/c/intfcm/ApplicationName //apple_ref/c/func/ApplicationName //apple_ref/c/ftmplt/ApplicationName //apple_ref/c/defn/ApplicationName //apple_ref/c/macro/ApplicationName" --><font class="function">ApplicationName</font><!-- /a -->(
+    <font class="param">void</font> ); </pre></blockquote>
+<dl><dt><i>function result</i></dt><dd>Returns the address of a static buffer containing the name of the current
+application. The caller should not free this pointer.
+</dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This function will get the name of the current application by calling
+_NSGetExecutablePath(). If that indicates a value of 'LaunchCFMApp', then
+this function will look up and bind to the Carbon library's CopyProcessName()
+function, and will use that to find out the application name instead.
+<br><br>
+The value is looked up once and written to a static buffer. On subsequent 
+calls, the address of the buffer is simply returned as-is.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/DebugLog;  name=DebugLog -->
+<a name="//apple_ref/c/func/DebugLog"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DebugLog">DebugLog</a></h3>
+</td></tr></table><hr><dl></dl><p>Log information useful when debugging.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/DebugLog //apple_ref/c/clm/DebugLog //apple_ref/c/intfcm/DebugLog //apple_ref/c/func/DebugLog //apple_ref/c/ftmplt/DebugLog //apple_ref/c/defn/DebugLog //apple_ref/c/macro/DebugLog" --><font class="function">DebugLog</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">format</font>,
+    ... ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>format</i></code></dt><dd>A printf-style format string.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This will write data to the application's logfile; however, it will
+only do this if a file/folder called 'Debug' exists in the log folder
+(/Library/Logs/DynamicPatch).
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/DebugLogMacro;  name=DebugLogMacro -->
+<a name="//apple_ref/c/func/DebugLogMacro"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DebugLogMacro">DebugLogMacro</a></h3>
+</td></tr></table><hr><dl></dl><blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/DebugLogMacro //apple_ref/c/clm/DebugLogMacro //apple_ref/c/intfcm/DebugLogMacro //apple_ref/c/func/DebugLogMacro //apple_ref/c/ftmplt/DebugLogMacro //apple_ref/c/defn/DebugLogMacro //apple_ref/c/macro/DebugLogMacro" --><font class="function">DebugLogMacro</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">file</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/econst/int //apple_ref/c/struct/int //apple_ref/c/clconst/int" --><font class="type">int</font><!-- /a --> <font class="param">line</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">format</font>,
+    ... ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>file</i></code></dt><dd>Filename; usually provided by the __FILE__ macro.</dd>
+<dt><code><i>line</i></code></dt><dd>Line number; usually provided by the __LINE__ macro.</dd>
+<dt><code><i>format</i></code></dt><dd>A print-style format string.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>Helper function for the <!-- a logicalPath="//apple_ref/c/macro/DEBUGLOG" -->DEBUGLOG <!-- /a --> macro. 
+Takes a file/line argument and prepends their data to the format string 
+whilst writing the log message. It will trim the <code>file</code> argument
+to just the last path component, rather than printing the entire path in the
+logfile.
+<br><br>
+This calls through to <!-- a logicalPath="//apple_ref/c/func/vDebugLog" -->vDebugLog <!-- /a --> to write data.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/FileFromFQPN;  name=FileFromFQPN -->
+<a name="//apple_ref/c/func/FileFromFQPN"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="FileFromFQPN">FileFromFQPN</a></h3>
+</td></tr></table><hr><dl></dl><p>Get the last path component of an FQPN.
+</p>
+<blockquote><pre> <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/FileFromFQPN //apple_ref/c/clm/FileFromFQPN //apple_ref/c/intfcm/FileFromFQPN //apple_ref/c/func/FileFromFQPN //apple_ref/c/ftmplt/FileFromFQPN //apple_ref/c/defn/FileFromFQPN //apple_ref/c/macro/FileFromFQPN" --><font class="function">FileFromFQPN</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">fqpn</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>fqpn</i></code></dt><dd>A fully qualified path name, in POSIX format (using '/' as a path delimiter).</dd>
+</dl>
+</blockquote>
+<dl><dt><i>function result</i></dt><dd>A pointer to the last path component, within the given string.
+</dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This will scan the string for the last instance of a path delimiter, and
+return a pointer to the next character after that value. It checks internally
+for trailing delimiters, and ensures that the value returns is a valid name.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/InitLogs;  name=InitLogs -->
+<a name="//apple_ref/c/func/InitLogs"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="InitLogs">InitLogs</a></h3>
+</td></tr></table><hr><dl></dl><p>Initialize the logging subsystem.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/InitLogs //apple_ref/c/clm/InitLogs //apple_ref/c/intfcm/InitLogs //apple_ref/c/func/InitLogs //apple_ref/c/ftmplt/InitLogs //apple_ref/c/defn/InitLogs //apple_ref/c/macro/InitLogs" --><font class="function">InitLogs</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">logName</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>logName</i></code></dt><dd>The name for the logfile to which messages are to be written.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This will ensure that the appropriate logging folders are created, and
+that they have the correct permissions. It will also fill in some static 
+string buffers with the paths for each logfile, and will open the system
+log using the provided name.
+<br><br>
+This can be called more than once; in that eventuality, the
+stored log name will be updated to use the new value.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/LogEmergency;  name=LogEmergency -->
+<a name="//apple_ref/c/func/LogEmergency"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="LogEmergency">LogEmergency</a></h3>
+</td></tr></table><hr><dl></dl><p>Log information about a critical error.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/LogEmergency //apple_ref/c/clm/LogEmergency //apple_ref/c/intfcm/LogEmergency //apple_ref/c/func/LogEmergency //apple_ref/c/ftmplt/LogEmergency //apple_ref/c/defn/LogEmergency //apple_ref/c/macro/LogEmergency" --><font class="function">LogEmergency</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">format</font>,
+    ... ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>format</i></code></dt><dd>A printf-style format string.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This will write data to both the application's logfile and the global
+error logfile, and also to the system log, at the LOG_CRIT priority. As
+such, it gets replicated three times on disk, sent to all open terminals, 
+and causes a system beep. It may also, if the folder 'Notify' exists in
+the log folder, put up a user-level alert dialog containing the given message.
+<br><br>
+It is highly recommended that this function not be used. Instead, it is 
+suggested to simply Write Your Software Well, So It Handles Errors. You 
+should use this routine only if a software component has encountered a 
+disastrous circumstance, and therefore cannot continue running, causing
+an obvious error and a failure of a larger system. For
+instance, there are only a few calls to this in the patching
+API, and they are always when something very much unexpected
+happens which will hobble the whole thing, such as being unable
+to allocate memory for the patch jump tables, or being unable
+to reset protection on a memory region.
+<br><br>
+In short: You Have Been Warned.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/LogError;  name=LogError -->
+<a name="//apple_ref/c/func/LogError"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="LogError">LogError</a></h3>
+</td></tr></table><hr><dl></dl><p>Log information about an error.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/LogError //apple_ref/c/clm/LogError //apple_ref/c/intfcm/LogError //apple_ref/c/func/LogError //apple_ref/c/ftmplt/LogError //apple_ref/c/defn/LogError //apple_ref/c/macro/LogError" --><font class="function">LogError</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">format</font>,
+    ... ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>format</i></code></dt><dd>A printf-style format string.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This will write data to the application's logfile, and also to the
+global error logfile. It also passes the same message onto the system
+log, using the LOG_ERR priority. As such, the message will be written to
+disk three times, and will appear in the system logfile.
+<br><br>
+It is recommended that this function only be used to print out information
+on errors which are likely to adversely affect the operation of a software
+component. If an error is recoverable, or not likely to have a readily
+apparent effect to the end user, then it is probably safest to use
+<!-- a logicalPath="//apple_ref/c/func/LogMessage" -->LogMessage <!-- /a --> instead. However, if the error really
+should never happen, even if recoverable, this is probably the best place
+to put it.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/LogMessage;  name=LogMessage -->
+<a name="//apple_ref/c/func/LogMessage"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="LogMessage">LogMessage</a></h3>
+</td></tr></table><hr><dl></dl><p>Log general operational information.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/LogMessage //apple_ref/c/clm/LogMessage //apple_ref/c/intfcm/LogMessage //apple_ref/c/func/LogMessage //apple_ref/c/ftmplt/LogMessage //apple_ref/c/defn/LogMessage //apple_ref/c/macro/LogMessage" --><font class="function">LogMessage</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">format</font>,
+    ... ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>format</i></code></dt><dd>A printf-style format string.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This will write data to the application's logfile. It will also pass
+the same message onto the system log, using the LOG_DEBUG priority.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/NamedLog;  name=NamedLog -->
+<a name="//apple_ref/c/func/NamedLog"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="NamedLog">NamedLog</a></h3>
+</td></tr></table><hr><dl></dl><p>Log information to a specifically-named logfile.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/NamedLog //apple_ref/c/clm/NamedLog //apple_ref/c/intfcm/NamedLog //apple_ref/c/func/NamedLog //apple_ref/c/ftmplt/NamedLog //apple_ref/c/defn/NamedLog //apple_ref/c/macro/NamedLog" --><font class="function">NamedLog</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">name</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">format</font>,
+    ... ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>name</i></code></dt><dd>The name of the logfile; a name of 'bob' will result in a file called
+'bob.log'.</dd>
+<dt><code><i>format</i></code></dt><dd>A printf-style format string.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This will write data only to a logfile with the name specified. It is 
+unique among these logging functions in that it doesn't require a prior call
+to <!-- a logicalPath="//apple_ref/c/func/InitLogs" -->InitLogs <!-- /a --> in order to function.
+<br><br>
+In syslog mode, this will print a LOG_INFO message with the
+given name prepended.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/vDebugLog;  name=vDebugLog -->
+<a name="//apple_ref/c/func/vDebugLog"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="vDebugLog">vDebugLog</a></h3>
+</td></tr></table><hr><dl></dl><blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/vDebugLog //apple_ref/c/clm/vDebugLog //apple_ref/c/intfcm/vDebugLog //apple_ref/c/func/vDebugLog //apple_ref/c/ftmplt/vDebugLog //apple_ref/c/defn/vDebugLog //apple_ref/c/macro/vDebugLog" --><font class="function">vDebugLog</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">format</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/va_list //apple_ref/c/cl/va_list //apple_ref/c/tdef/va_list //apple_ref/c/tag/va_list //apple_ref/c/econst/va_list //apple_ref/c/struct/va_list //apple_ref/c/clconst/va_list" --><font class="type">va_list</font><!-- /a --> <font class="param">args</font> ); </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>See <!-- a logicalPath="//apple_ref/c/func/DebugLog" -->DebugLog <!-- /a --> for details.</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/vLogEmergency;  name=vLogEmergency -->
+<a name="//apple_ref/c/func/vLogEmergency"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="vLogEmergency">vLogEmergency</a></h3>
+</td></tr></table><hr><dl></dl><blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/vLogEmergency //apple_ref/c/clm/vLogEmergency //apple_ref/c/intfcm/vLogEmergency //apple_ref/c/func/vLogEmergency //apple_ref/c/ftmplt/vLogEmergency //apple_ref/c/defn/vLogEmergency //apple_ref/c/macro/vLogEmergency" --><font class="function">vLogEmergency</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">format</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/va_list //apple_ref/c/cl/va_list //apple_ref/c/tdef/va_list //apple_ref/c/tag/va_list //apple_ref/c/econst/va_list //apple_ref/c/struct/va_list //apple_ref/c/clconst/va_list" --><font class="type">va_list</font><!-- /a --> <font class="param">args</font> ); </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>See <!-- a logicalPath="//apple_ref/c/func/LogEmergency" -->LogEmergency <!-- /a --> for details.</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/vLogError;  name=vLogError -->
+<a name="//apple_ref/c/func/vLogError"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="vLogError">vLogError</a></h3>
+</td></tr></table><hr><dl></dl><blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/vLogError //apple_ref/c/clm/vLogError //apple_ref/c/intfcm/vLogError //apple_ref/c/func/vLogError //apple_ref/c/ftmplt/vLogError //apple_ref/c/defn/vLogError //apple_ref/c/macro/vLogError" --><font class="function">vLogError</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">format</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/va_list //apple_ref/c/cl/va_list //apple_ref/c/tdef/va_list //apple_ref/c/tag/va_list //apple_ref/c/econst/va_list //apple_ref/c/struct/va_list //apple_ref/c/clconst/va_list" --><font class="type">va_list</font><!-- /a --> <font class="param">args</font> ); </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>See <!-- a logicalPath="//apple_ref/c/func/LogError" -->LogError <!-- /a --> for details.</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/vLogMessage;  name=vLogMessage -->
+<a name="//apple_ref/c/func/vLogMessage"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="vLogMessage">vLogMessage</a></h3>
+</td></tr></table><hr><dl></dl><blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/vLogMessage //apple_ref/c/clm/vLogMessage //apple_ref/c/intfcm/vLogMessage //apple_ref/c/func/vLogMessage //apple_ref/c/ftmplt/vLogMessage //apple_ref/c/defn/vLogMessage //apple_ref/c/macro/vLogMessage" --><font class="function">vLogMessage</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">format</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/va_list //apple_ref/c/cl/va_list //apple_ref/c/tdef/va_list //apple_ref/c/tag/va_list //apple_ref/c/econst/va_list //apple_ref/c/struct/va_list //apple_ref/c/clconst/va_list" --><font class="type">va_list</font><!-- /a --> <font class="param">args</font> ); </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>See <!-- a logicalPath="//apple_ref/c/func/LogMessage" -->LogMessage <!-- /a --> for details.</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/c/func/vNamedLog;  name=vNamedLog -->
+<a name="//apple_ref/c/func/vNamedLog"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="vNamedLog">vNamedLog</a></h3>
+</td></tr></table><hr><dl></dl><blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/vNamedLog //apple_ref/c/clm/vNamedLog //apple_ref/c/intfcm/vNamedLog //apple_ref/c/func/vNamedLog //apple_ref/c/ftmplt/vNamedLog //apple_ref/c/defn/vNamedLog //apple_ref/c/macro/vNamedLog" --><font class="function">vNamedLog</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">name</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">format</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/va_list //apple_ref/c/cl/va_list //apple_ref/c/tdef/va_list //apple_ref/c/tag/va_list //apple_ref/c/econst/va_list //apple_ref/c/struct/va_list //apple_ref/c/clconst/va_list" --><font class="type">va_list</font><!-- /a --> <font class="param">args</font> ); </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>See <!-- a logicalPath="//apple_ref/c/func/NamedLog" -->NamedLog <!-- /a --> for details.</p>
+</dl>
+<p>(Last Updated November 06, 2006)
+</p></body></html>

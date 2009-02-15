@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html><HEAD>
+    <title>API Documentation</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css"><!--a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;}--></style> <meta name="generator" content="HeaderDoc">
+</HEAD>
+<BODY bgcolor="#ffffff">
+<H1>Logging Utilities</H1><hr>
+The DynamicPatch framework's integrated logging interface.
+
+<br>
+<p></p>
+<b>Includes:</b> <!-- a logicalPath="//apple_ref/doc/header/DPAPI.h" -->"DPAPI.h"<!-- /a -->,
+<!-- a logicalPath="//apple_ref/doc/header/stdarg.h" -->&lt;stdarg.h&gt;<!-- /a --><br>
+<p></p>
+<hr><br>
+There are four main classes of logging: Debug, Messages, Errors,
+and Emergencies. Appended to this is the ability to write to a log with
+a given name.
+<br><br>
+NB: By default, this API works as described below. However, there
+is a preprocessor flag which will make it use the syslog
+functions instead.
+<br><br>
+Each log type conditionally writes to one or more files. In addition, 
+the Emergency log routines may optionally put up a general alert dialog.
+This behaviour is user-modifiable.
+<br><br>
+Each of the four main log operations will write to a logfile whose name
+takes the format '[name].log', where [name] is the value provided to the
+<!-- a logicalPath="//apple_ref/c/func/InitLogs" -->InitLogs <!-- /a --> function. In addition, the Error and
+Emergency log operations will write the same data, along with the 
+specified name, to a file called 'errors.log'.
+<br><br>
+All logfiles will be automatically rolled when they reach 2Mb in size.
+There will be a maximum of five logfiles (named xxx.log, xxx.log.1, etc.)
+for each filename in existence at any one time. As such, each application
+can potentially use up to 10Mb of disk space for logs. However, a cron
+job (such as that used on /var/log) can easily clean up or compress old
+files, if required.
+<br><br>
+The Debug log will not print information to any logfile by default. To
+enable output from the DebugLog function, the end user must create a
+folder called 'Debug' within the log folder (currently
+'/Library/Logs/DynamicPatch'). Similarly, the Emergency log will not put
+up user alerts by default, but can be enabled by creating a folder
+called 'Notify' within the same log folder.
+<br><br>
+In addition to printing information to these logfiles,  LogEmergency will
+write to the syslog using the LOG_CRIT priority. Emergency-level logs are
+generally not expected to happen, and should only be use in dire need.
+<br><br>
+Since emergencies get filed to the system log as critical errors, messages
+will appear in all command-line terminals in the event of an emergency, and
+those terminal will in that case issue a beep.
+<br><br>
+For assistance in providing useful debugging information, it is recommended
+that the debug log be accessed through the <!-- a logicalPath="//apple_ref/c/macro/DEBUGLOG" -->DEBUGLOG <!-- /a -->
+macro. That macro will feed file/line information into the debug log, to
+aid in tracking down errors. This is especially useful when dealing with
+repetitive network communication handlers, where a general error message
+of "Server returned error: -5006" doesn't help to locate the associated
+code, but where it isn't desirable to type detailed location information
+with slight differences a hundred times over.
+<br><br>
+A side benefit of these logging functions is access to an authoritative
+application name, where that might be useful; for instance, in a loadable
+bundle or framework. The <!-- a logicalPath="//apple_ref/c/func/ApplicationName" -->ApplicationName <!-- /a -->
+function will store the application name in a static buffer on first
+call, and will return the address of this buffer to the caller. In addition,
+it is CFM-aware: if it detects a Unix application name of 'LaunchCFMApp', it
+will dynamically bind to the Carbon framework, which by definition should 
+already be loaded, and will use the CopyProcessName function to get the
+real name of the application.
+<br><br>
+<b>Usage:</b><br />
+Before calling any logging functions, call <!-- a logicalPath="//apple_ref/c/func/InitLogs" -->InitLogs <!-- /a -->,
+passing the name of your application (or the desired name for your logfile,
+if different). Until this call is made, no logging functions will work. 
+<br><br>
+After initialization, use the basic logging functions as you would printf,
+and if necessary, you can use the va_list versions to perform part of the 
+processing yourself, or to feed your own vararg logging routines through 
+this API.
+<br><br>
+It is not necessary to manually close the logging system. It installs an 
+exit handler to release any allocated resources. Currently, the only
+action taken on exit is to close the system log, but this is potentially
+subject to change.
+<br><br>
+
+<br><br>
+<hr><br><center>(Last Updated November 06, 2006)
+<br><font size="-1">HTML documentation generated by <a href="http://www.opensource.apple.com/projects" target="_blank">HeaderDoc</a></font>
+</center>
+</BODY>
+</HTML>

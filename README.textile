@@ -1,0 +1,49 @@
+h1. Dynamic Patching (Function Overriding) Framework
+
+h2. Description
+
+This framework is based on code which evolved over time as part of a commercial software product (albeit entirely written by me). No commercial code is present, everything was re-written specifically for public release about two years ago, when I worked throughout Christmas to implement function patching within Rosetta processes on Intel machines. It was never officially released, however, because shortly after completing this version, the original was found to have issues with some Rosetta applications (Office and Adobe CS apps -- _big surprise_, I know).
+
+The commercial injection code was then fairly heavily rewritten in a manner which ultimately turned out to use the same injection vector as Unsanity's APE code; i.e., when testing a nasty bug on a colleague's machine we found that they installed stuff on almost the same core system routine we did (to get injection bundles loaded while an app is in a known state), and backtraced it to see that they were ultimately doing the same sort of thing.
+
+Because of that similarity, I never rewrote this to use the same method-- under the theory that, although we personally didn't make money from this method (we only used it internally to implement some low-level system control features), Unsanity does, and we didn't want to step on their toes. Of course, if they _don't mind..._
+
+h2. Layout
+
+The project is split into a few different sections:
+
+h3. Atomic:
+
+Atomic CompareAndSwap routines for 32-bit integers (plus 64-bit on Intel), and a cache flush function, all implemented in assembler.
+
+h3. Bundles:
+
+Code used in loading & starting patch bundles. This is called by the injection entry code.
+
+h3. Examples:
+
+Not included in the main project; this folder contains separate projects used to test & verify the main framework.
+
+h3. Injection:
+
+Injector source code, along with precompiled code blocks; also includes the C and assembler source used to generate the code block arrays, although these files are not compiled by the project.
+
+h3. Lookup:
+
+Function lookup routines, similar to nlist(). There are Cocoa message implementation lookups, which will only function if objc.dylib is loaded, and standard lookups, which will look at the source framework *on disk* in order to implement cross-architecture searching (for Rosetta injection, Intel code searches for PowerPC addresses).
+
+h3. Patching:
+
+Code used to implement the patching algorithms themselves. Separate files for PowerPC, Intel, and Rosetta code, containing a certain amount of unabashed duplication. Also includes pre-compiled Rosetta stub code, and the (not compiled in project) PowerPC assembler source.
+
+h3. PublicHeaders:
+
+All the headers included in the 'Headers' folder of the finished framework.
+
+h3. Startup:
+
+The C-implemented functions called by the injected stubs; these are the entry points for the patch bundle loaders.
+
+h3. Utilities:
+
+Useful stuff used by the above; includes logging facilities, name for process ID lookup, and an IA-32 instruction stream parser, originally written by Elene Terry.

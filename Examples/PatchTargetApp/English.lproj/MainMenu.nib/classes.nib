@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {showAlert = id; }; 
+            CLASS = PTAController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {msgField = NSTextField; titleField = NSTextField; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

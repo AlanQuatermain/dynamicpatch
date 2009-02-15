@@ -1,0 +1,582 @@
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf330
+{\fonttbl\f0\fswiss\fcharset77 Helvetica-Bold;\f1\fswiss\fcharset77 Helvetica;\f2\fmodern\fcharset77 Courier;
+\f3\fswiss\fcharset77 Helvetica-Oblique;}
+{\colortbl;\red255\green255\blue255;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc2\leveljcn2\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid0\'02\'05.;}{\levelnumbers\'01;}}{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc2\leveljcn2\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid0\'02\'05.;}{\levelnumbers\'01;}}{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc2\leveljcn2\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid0\'02\'05.;}{\levelnumbers\'01;}}{\listname ;}\listid3}
+{\list\listtemplateid4\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc2\leveljcn2\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid0\'02\'05.;}{\levelnumbers\'01;}}{\listname ;}\listid4}
+{\list\listtemplateid5\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc2\leveljcn2\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid0\'02\'05.;}{\levelnumbers\'01;}}{\listlevel\levelnfc2\levelnfcn2\leveljc2\leveljcn2\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{lower-roman\}.}{\leveltext\leveltemplateid1\'02\'05.;}{\levelnumbers\'01;}}{\listlevel\levelnfc4\levelnfcn4\leveljc2\leveljcn2\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{lower-alpha\}.}{\leveltext\leveltemplateid2\'02\'05.;}{\levelnumbers\'01;}}{\listname ;}\listid5}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}{\listoverride\listid5\listoverridecount0\ls5}}
+\margl1440\margr1440\vieww18140\viewh20040\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\b\fs72 \cf0 Dynamic Patching on OS X
+\fs48 \
+
+\fs36 PowerPC, Intel, and Rosetta\
+
+\f1\b0\fs28 \
+As a primer, it is suggested that you read Jon Rentzsch's paper 'Dynamically Overriding Mac OS X', available at http://www.rentzsch.com/papers/overridingMacOSX\
+\
+The implementation described here is a little different to Jon's mach_override and mach_inject. The override process itself is more or less the same, albeit with slightly different branch islands; the injection procedure is very much different, using its own custom code block rather than copying in a whole Mach-O binary file remotely.\
+\
+
+\f0\b\fs48 \
+Native Function Patching/Overriding
+\fs36 \
+
+\f1\b0\fs28 The patching procedure itself works in the same general manner, except that in this implementation, we use registers 11 & 12 to setup the branch target, and we encode the address into memory, rather than directly into the instructions. We also add another address to use as an error handler.\
+\
+On PowerPC, the branch islands (both patch & reentry are based on the same template) look like this:\
+\
+
+\f2\fs24 static unsigned int branch_template[] = \{\
+    0x00000000,     // .long    branch_target_addr\
+    0x00000000,     // .long    error_branch_target\
+    0x3D600000,     // lis      r11,(msw of this_entry_addr)\
+    0x616B0000,     // ori      r11,r11,(lsw of this_entry_addr)\
+    0x818B0000,     // lwz      r12,0(r11)  -- loads branch_target_addr into r12\
+    0x2C0C0000,     // cmpwi    r12,0\
+    0x7D8903A6,     // mtctr    r12\
+    0x60000000,     // nop                  -- can modify r12 here (optional)\
+    0x60000000,     // nop                  -- store first instruction here (optional)\
+    0x4C820420,     // bnectr\
+    0x818B0004,     // lwz      r12,4(r11)  -- loads error_branch_target into r12\
+    0x7D8903A6,     // mtctr    r12\
+    0x4E800420      // bctr                 -- call error handler\
+\};
+\f1\fs28 \
+\
+The reason we use registers 11 and 12 is to match the behaviour of other dynamic branches such as C++ virtual function calls, and Objective-C message calls, both of which load the address into r12 before moving it to the count register. Since these are considered volatile during function calls (i.e. not likely to be preserved by the called function) their use is acceptable.\
+\
+In the branch-to-patch island, the first address is that of the target patch function, and the second is the address of the reentry island. The idea being that the patch could be simply disabled by zeroing the target address. At this point, the error handler comes into play and the original function is called instead.\
+\
+In the reentry-island, the first address is that of the original function's second instruction, and the second is left zero. This causes a noticeable error if the target is ever set to zero as well. Alternatively, the error handler could be the address of a clever function which would be able to unroll the stack, remove the patch, and return execution to the original function.\
+Also in here we replace the two no-op instructions. The first one decrements the value in r12 by four bytes, so a called function can potentially use that address to access other relative functions (well, it 
+\f3\i could
+\f1\i0  happen). The second contains the saved first instruction of the target function, which will execute just prior to our branch.\
+\
+On Intel, the code works in a similar manner, although two different templates are used, due to the potentially large number of instructions to save in the reentry island:\
+\
+
+\f2\fs24 static unsigned char patch_template[] = \{\
+// L_TemplateStart:\
+    0x00,0x00,0x00,0x00,            // .long branch_target\
+    0x00,0x00,0x00,0x00,            // .long error_handler\
+    0xBA,0x00,0x00,0x00,0x00,       // movl L_TemplateStart, %edx\
+    0x8B,0x02,                      // movl (%edx), %eax        -- loads branch_target\
+    0x85,0xC0,                      // test %eax, %eax\
+    0x0F,0x85,0x03,0x00,0x00,0x00,  // jne  L_BranchToTarget\
+    0x8B,0x42,0x04,                 // movl 4(%edx), %eax       -- loads error_handler\
+// L_BranchToTarget:\
+    0xFF,0xE0                       // jmp  *%eax\
+\};\
+\
+static unsigned char reentry_template_start[] = \{\
+// L_TemplateStart:\
+    0x00,0x00,0x00,0x00,            // .long branch_target\
+    0x00,0x00,0x00,0x00,            // .long error_handler\
+    0xBA,0x00,0x00,0x00,0x00,       // movl L_TemplateStart, %edx\
+    0x8B,0x02,                      // movl (%edx), %eax        -- loads branch_target\
+    0x85,0xC0,                      // test %eax, %eax\
+    0x0F,0x85,0x08,0x00,0x00,0x00,  // jne  L_CallOriginal\
+    0x8B,0x42,0x04,                 // movl 4(%edx), %eax       -- loads error_handler\
+    0xEB,0x01                       // jmp  L_BranchToTarget -- **** overwrite last byte with real offset\
+// L_CallOriginal:\
+\};\
+\
+// ... saved instruction goes in the middle ...\
+\
+static unsigned char reentry_template_end[]  = \{\
+// L_BranchToTarget:\
+    0xFF,0xE0                       // jmp  *%eax\
+\};
+\f1\fs28 \
+\
+Here we use eax & edx to load the branch target. It's also worth noting that the last byte of 
+\f2 reentry_template_start
+\f1  contains the number of bytes of saved instructions that follow. This is used in the RemovePatch function to copy those bytes back into the original function.\
+\
+
+\f0\b\fs32 \
+Atomic Operations
+\fs28 \
+
+\f1\b0 On PowerPC, we have an easy time with regard to rewriting instructions, as all instructions are 32-bits long. We can also use the following block of code to implement a compare-and-swap routine to swap around two 32-bit values:\
+\
+
+\f2\fs24 .cas_retry:\
+    lwarx   r6, 0, r5           ; load 32-bit word at 'address' (r5) into r6\
+    cmpw    r6, r3              ; compare contents of r6 with 'oldVal' (r3)\
+    bne-    .cas_fail           ; end if not equal\
+    stwcx.  r4, 0, r5           ; try to store 'newVal' (r4) into 32-bit word at 'address' (r5)\
+    bne-    .cas_retry          ; if store failed, retry\
+    isync                       ; make sure instruction cache reflects any changes\
+    li      r3, 1               ; return 1 on success\
+    blr                         ; return to caller\
+.cas_fail:\
+    li      r3, 0               ; return 0 on failure\
+    blr                         ; return to caller
+\f1\fs28 \
+\
+This will check if the value at the given address is the same as expected, and will write out the new value if this proves to be the case. In the event that the operation cannot be performed atomically, the store instruction will fail, and the code will loop and retry. It returns 1 if the value was written and 0 if the caller should re-read the 'old' value again.\
+\
+On Intel, the same effect can be gained through the use of the 
+\f2 cmpxchgl
+\f1  and 
+\f2 cmpxchg8b
+\f1  instructions. When these are preceded by the 
+\f2 lock
+\f1  meta-instruction, they are guaranteed to be completed before the processor switches contexts. The latter 8-byte variant is used on Intel since the branch-absolute instruction (jump to 32-bit inline address) we use is five bytes long. In order to atomically place this value, we pad it out to 8 bytes by reading more from the original function, and we then swap those 8 bytes directly. In the event that we need to copy more than 8 bytes, we have to trust to memcpy() and a little luck; however, I've yet to see an instance where this has ever happened.\
+\
+
+\f0\b\fs32 \cf0 \
+Patch Removal
+\fs28 \cf0 \
+
+\f1\b0 In the event that patches need to be removed, each architecture has its own removal function. These will start at the target function, follow its branch instruction to the branch-to-patch island, read the address of the re-entry island from there, and will read the saved instructions from that block of code. In the case of the PowerPC patches, this is just a 32-bit value read from a definite offset. On Intel, we have to read the one-byte size value first, then read that many bytes.\
+\
+
+\f0\b\fs48 \cf0 \
+Code Injection
+\fs36 \cf0 \
+
+\f1\b0\fs28 Injection is implemented here by using a pre-compiled chunk of standard code. The idea behind this implementation is that a number of pre-built 'patch bundles' are to be loaded into a number of applications, usually all that launch, in order to alter functionality on a system-wide level. This is the same approach taken by the folks at Unsanity (http://www.unsanity.com/) with their Application Enhancer and Haxies.\
+\
+In this case, then, injection is merely the means to call code inside the framework, which handles the duties of enumerating and loading these bundles. The injected code reflects that. It includes two functions, an initial function designed to setup a mostly stable operating environment, and which then creates a proper pthread to run the other. These take a large structure as an argument, which contains function pointers and storage:\
+\
+
+\f2\fs24 typedef struct __newthread_args\
+\{\
+    ___pthread_set_self_fn      setSelfFn;\
+    ___pthread_create_int_fn    createFakeFn;\
+    __pthread_create_fn         createPthreadFn;\
+    __loadimage_fn_ptr          addImageFn;\
+    __lookup_fn_ptr             lookupFn;\
+    __lookup_sym_fn_ptr         lookupSymFn;\
+    __sym_addr_fn_ptr           symAddrFn;\
+    __thr_term_fn               terminateFn;\
+    __thr_me_fn                 selfFn;\
+\
+    void *                      stack_base;\
+\
+    char fn_name[ 32 ];\
+\
+    char lib_name[ PATH_MAX ];\
+    char patch_name[ PATH_MAX ];\
+\
+    struct _opaque_pthread_t    fakeThread;\
+    pthread_attr_t              fakeAttrs;\
+\
+\} newthread_args_t;
+\f1\fs28 \
+\
+Firstly there are some function pointers. These are all initialized to the addresses of several function within the System library, which loads at a static address (0x90000000), and which loads directly after the program binary; as such, there is very little chance that it would be relocated.\
+\
+The addresses include those for 
+\f2 __pthread_set_self()
+\f1 , 
+\f2 _pthread_create()
+\f1  (used to wrap a pthread structure around a kernel thread), 
+\f2 pthread_create()
+\f1 , 
+\f2 NSAddImage()
+\f1 , 
+\f2 dlopen()
+\f1 , 
+\f2 NSLookupAndBindSymbol()
+\f1 , 
+\f2 NSAddressOfSymbol()
+\f1 , 
+\f2 thread_terminate()
+\f1 , and 
+\f2 mach_thread_self()
+\f1 . There are slots for both the dlopen-style APIs and the NSLookup-APIs, although the latter are left in purely for compatibility on Mac OS X 10.2, where the former is not available. These are used to load the DynamicPatch framework itself, and to lookup the address of the injection start function within that framework.\
+\
+Following this comes the stack base address (used by 
+\f2 _pthread_create
+\f1 ), the name of the startup function (there are two options: one which loads all bundles, one which takes a path to a single bundle), and the FQPNs of both the framework and (optionally) the specific patch bundle to load. Lastly are two variables used with 
+\f2 _pthread_create()
+\f1  to get a proper pthread-safe environment in the kernel thread.\
+\
+This code then leads into the real functions, which use the CoreFoundation APIs to load the patch bundles and start them running. The patch bundles themselves would implement a single function, like so:\
+\
+
+\f2\fs24 int PatchMain( CFBundleRef myBundle )\
+\{\
+	// do stuff ...\
+	return (1);\
+\}\
+
+\f1\fs28 \
+They can return 1 if they want to stay resident in memory, or optionally can return zero to be unloaded (if they decided not to patch anything, or if they encountered an error that prevented their continuation). Normally, the bundle would call 
+\f2 DPCreatePatch()
+\f1  to patch some functions, but that's not technically necessary: one of the included examples simply puts up an alert dialog.\
+\
+The injecting process itself is less involved: it uses the mach kernel routines to allocate the stack in the remote task, copy in the code and the argument block, and create the thread. It creates it suspended, then sets up the thread state such that when it is resumed, it will begin executing the injected code, and will have the addresses of the pthread entry point and the argument block as parameters.\
+\
+
+\f0\b\fs48 \
+Rosetta Injection/Patching
+\fs36 \
+
+\f1\b0\fs28 \cf0 From the point of view of dynamic overriding and code injection, the Rosetta environment has a couple of interesting properties:\
+\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\ql\qnatural\pardirnatural
+\ls1\ilvl0{\listtext	1.	}It is actually an Intel process. That bears repeating: the threads running via the Mach kernel have i386 thread states.\
+{\listtext	2.	}It runs by launching the translate application, which loads into high memory and replicates a lot of the system library. It also provides shims for certain of the items within that library, which are (I believe) used to handle system calls and Mach calls from the PowerPC 'threads'.\
+{\listtext	3.	}The PowerPC application sees itself as a normal PowerPC application, although its thread state is maintained entirely by the translate application for the purposes of 'fooling' the PowerPC code.\
+{\listtext	4.	}Overwriting code in a Rosetta process, even one which has already been called and therefore translated, appears to work just as it would natively.\
+{\listtext	5.	}The libraries loaded are the PowerPC ones -- no Intel-based code is loaded, except that handled directly by the (private) functions within the translate application.\
+{\listtext	6.	}Upon investigation, if a translated application has 
+\f3\i n
+\f1\i0  threads, then there will be 
+\f3\i n+1
+\f1\i0  Intel threads running. One is the main (translate) app thread, the others each appear to correspond to a real PowerPC thread.\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+This gives us a specific set of problems to investigate:\
+\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\ql\qnatural\pardirnatural
+\ls2\ilvl0{\listtext	1.	}If we inject PowerPC code, how can we set up a thread to run it?\
+{\listtext	2.	}If we inject Intel code, how can we affect the PowerPC environment?\
+{\listtext	3.	}If we copy in or otherwise attempt to load a bundle or other binary file, what will dyld do with that, and will it be treated as translated or native?\
+{\listtext	4.	}Will an injected Mach-O binary file be able to link against system libraries properly?\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\
+
+\f0\b 1. Injecting PowerPC Code\
+
+\f1\b0 We can create a thread easily, through the use of the 
+\f2 thread_create()
+\f1  Mach call. We can then use 
+\f2 thread_get_state()
+\f1  and 
+\f2 thread_set_state()
+\f1  to setup the registers for that thread. However, upon closer inspection it becomes clear that the kernel is only creating i386 threads internally, and so handing it a PowerPC thread state results in invalid data, causing the new thread to crash the target application once it is resumed. This is really only to be expected: although it would have been nice if the kernel could have recognised the target as a translated application and forwarded on the call to that process to handle internally, it would make it somewhat difficult for the translate application to create its own Intel-native threads. So, we can inject PowerPC code (we could inject anything, after all, it's just data), but we can't use it as the entry point of a remotely-created thread. To create PowerPC threads, we need to call 
+\f2 thread_create()
+\f1  from the context of a PowerPC thread running within the target application already.\
+\
+
+\f0\b 2. Injecting Intel Code to Start a Translated Thread
+\fs32 \
+
+\f1\b0\fs28 Given the conditions laid out above, this would be the next-best thing: create a new translated thread by initialising an i386 thread structure at the same entry point used by the other translation threads. This entry point isn't entirely impossible: we can detect where the new thread is starting (essentially the translate application's implementation of 
+\f2 _pthread_body()
+\f1 ) and point our own thread at that. We can even deduce the caller-supplied pthread start function and perhaps even build something like we have in the native injector, where our Mach thread actually uses 
+\f2 pthread_create()
+\f1  to set up a complete environment for the target. The downside is that the parameter block appears to be quite complex, and takes significant reverse-engineering; and if it is reverse-engineered, there's nothing to stop it being changed in the next revision, thus breaking our software. Also, the same applies to the thread entry point: it's not a public symbol, nor even a private extern symbol. So again, there's little that can be done without writing a backtracer with some very clever code introspection (counting backwards through variable-length instructions, too\'d1 there's a reason why GDB shows the address of the 
+\f3\i next
+\f1\i0  instruction when it gives a stack backtrace, after all) to automatically work out where this entry point really is in a reliable way.\
+\
+
+\f0\b 3. Copying In a Mach-O File
+\fs32 \
+
+\f1\b0\fs28 This in itself seems promising. It's the method used by mach_star, and although I'm generally inclined against copying in code which would include calls to unbound functions and dyld stubs from a module which hasn't been handled by dyld (and therefore isn't in the dyld image table), I'd be willing to try this out here. However, we can't inject PowerPC code without being able to launch a PowerPC translator thread, which means we're confined to the i386 execution environment, which is fairly minimal, and is mostly statically linked into the translate application's binary. So, reliance on dyld might not help at all, because it's actually fairly likely that the translation environment uses its own private dyld implementation.\
+\
+
+\f0\b 4. Linking Injected Binaries
+\f1\b0 \
+Again the transation environment gets in the way: Since we can only inject an i386 thread, we'd need to link against an i386 system. Using dyld stub binding for external functions won't help, since the i386 versions of those functions aren't loaded. In fact, some of the few external symbols in the translate application are related to looking up & binding addresses from its shim libraries, indicating that the dyld implementation used by the i386 contexts is actually internal to the translate application. So, we can only copy in some entirely self-contained code.\
+\
+
+\f0\b\fs32 \
+Okay, That Didn't Work Out Too Well\
+
+\f1\b0\fs28 So, it looks like there's no particularly simple way of injecting code that'll do all the work we need to do. However, we can make one important assumption: we inject code so that we can override the target application. And what does patching do? It 
+\f3\i transfers program control to our code
+\f1\i0 . Aha!\
+\
+So, the idea now would be that the loading & binding be handled by the target of a branch island. The island itself can be installed easily enough from outside the target process using vm_write(), and since we can inject Intel code an atomic write of the branch-absolute instruction probably wouldn't be too difficult. So now all we need is something not entirely different from the dyld stub binding helper function, which would be the initial branch target, and which would then load the things that need loading, bind the patch function properly, and pass re-rentry island addresses back into the patch bundle when it loads.\
+\
+This gives us a rough idea of the overall process:\
+\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\ql\qnatural\pardirnatural
+\ls3\ilvl0{\listtext	1.	}The injector loads the bundle/bundles, and gets a list of patches to install.\
+{\listtext	2.	}It adds patches to a list, which contains the location of the patch bundle, the relative address of the patch function, and the reentry island address.\
+{\listtext	3.	}It builds a similar list containing the branch absolute instructions and the addresses at which they should be written.\
+{\listtext	4.	}It then copies these lists wholesale into the target process, along with the branch islands and a stub helper function.\
+{\listtext	5.	}Lastly, it injects a small i386 routine, along with the table from step 3. This will then atomically install the branch instructions.\
+{\listtext	6.	}The first time a patch function is called, it goes to the stub, which links everything it needs and changes the branch target address to point to the real patch function.\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\
+This can then be broken down into bite-sized pieces.\cf0 \
+\
+
+\f0\b \cf0 1. New Patch Bundle Entry Points
+\fs32 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f1\b0\fs28 \cf0 \
+We need to determine what patches need to be installed prior to injecting any code, and we have to decide this from a separate application, quite possibly a native IA-32 one. Therefore, we will need some more entry points into the bundle code to handle the Rosetta case: \
+\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\ql\qnatural\pardirnatural
+\ls4\ilvl0\cf0 {\listtext	\'a5	}WillPatch: A function to query whether any functions in the target app will be patched at all.\
+{\listtext	\'a5	}GetPatches: A function to request information on all prospective patches.\
+{\listtext	\'a5	}GiveReentry: A function to provide reentry information back to the bundle once it's loaded in the target process.\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 \
+Rather than mess about handing linked lists or other such structures into the patch bundle, we will supply a callback routine in the second function, so that the patch bundle can tell us about each patch individually. Also, for better handling of future architectural differences, we should tell the bundle which architecture the target application is using; this way, it can pass that value when calling our cross-architecture symbol lookup routines.\
+\
+Here, we end up with the following prototypes:\
+\
+
+\f2\fs24 typedef void (*__patch_details_cb)(void * target_addr, const char * patch_fn_name, void * info);\
+int WillPatchApplication( CFBundleRef myBundle, pid_t app_pid, const char * app_name );\
+int GetPatchDetails( __patch_details_cb cb, int target_arch, void * info );\
+
+\f1\fs28 \
+The last function, to get the reentry addresses, will also use a callback. We don't want to restrict the patch bundle to only having the reentry address for each patch applied as corresponding patch is called: they should all be set up 
+\f3\i before
+\f1\i0  the patch bundle receives any patch calls whatsoever. As such, we use a callback function, which will look through the data tables for a target function address, and will return the corresponding reentry address. Also, since this function is to be called when the bundle first loads into the target process, and can therefore be considered a good place for initialisation of other things, we pass the bundle its own executable path, from which it can (if it so chooses) infer its bundle path, and recreate the CFBundleRef it would normally receive in 
+\f2 PatchMain
+\f1 .\
+\
+
+\f2\fs24 typedef void * (*patch_lookup_fn_t)(void * patched_fn_addr);\
+void LinkPatches( patch_lookup_fn_t cb, const char * exec_path );\
+
+\f1\fs28 \
+
+\f0\b 2. Patch Info Data Table\
+
+\f1\b0 The details necessary to load the patch bundle and both link to the patch handler function within, and to give reentry code back out, involves three things: the reentry address, the path to the bundle executable, and the address of the patch function (relative to the base address of the bundle).\
+\
+The second item here is problematic; from a pure-structure point of view, we want to be able to iterate over an array of these structures, and use indices to reach each item in the array. Strings complicate the matter, since they are of variable length; the idea of storing 
+\f2 PATH_MAX
+\f1  bytes of string data (most of which would likely be unused) in the data table is not very useful, especially when we want to keep our memory usage to a minimum. However, here we have an example to follow already: the symbol tables of binary files. So, just like those, we will split our data table into statically-sized and variable-sized segments\'d1 namely the patch info table and the string table. The string table will just contain strings, one after another, each with a zero byte as a terminator. Any other structures that would contain variable-length strings will simply contain a four-byte offset into the string table.\
+\
+This give us the following structure:\
+\
+
+\f2\fs24 // Patch Info Table Entry:\
+struct rosetta_info_table_entry\
+\{\
+    // address of branch-to-original block\
+    // this is what the normal patch functions would return\
+    void * branch_original_code;\
+\
+    // offset in the string table to the path of the bundle containing\
+    // code for this patch\
+    unsigned patch_bundle_path_offset;\
+\
+    // offset of the patch function within its file image\
+    unsigned patch_fn_offset;\
+\
+\};\
+
+\f1\fs28 \
+
+\f0\b 3. Branch Installation Table\
+
+\f1\b0 The branch installation table is very simple, since each element just contains two 32-bit values, an address and an instruction. The instruction needs to be stored in big-endian format, however, while the address needs to remain little-endian.\
+\
+
+\f2\fs24 // this holds everything used by the injected routine in a rosetta\
+// application: what to write, and where. Everything else has been done\
+// already by the time this is used.\
+typedef struct _patch_entry_struct\
+\{\
+    vm_address_t    fn_addr;\
+    natural_t       ba_instr;\
+\
+\} patch_entry_t;\
+
+\f1\fs28 \
+
+\f0\b 4. Copying Into Target Process\
+
+\f1\b0 The copy part comes once everything else has been done. Once we've enumerated all the patch bundles, we will have built the jump tables and the data tables locally, and we will also have allocated the space for these inside the target process (the branch islands need to know one another's addresses, as do the patch info table entries). At this point, we can simply copy the blocks, one by one, into the target process. We then make them executable using 
+\f2 vm_protect()
+\f1 .\
+\
+However, we need a little more information than this alone. We need the assembly stub function itself, and we also need book-keeping information, such as the locations of the various tables, which we will need to deallocate later. Because of this, the patch data table begins with a header structure, which contains not only these addresses and their corresponding sizes, but also the offsets used to reach the patch info table and the string table, storage for the C-style name of the stub binding function proper (passed to 
+\f2 dlsym()
+\f1 ), and the stub helper code itself:\
+\
+
+\f2\fs24 // Data Table Structure:\
+struct rosetta_data_table_header\
+\{\
+    // length of data table (will be multiple of page-size)\
+    vm_size_t data_table_size;\
+\
+    // addresses of jump tables, so they can be deallocated\
+    // note that this *still* won't happen if no patched functions are\
+    // called\
+    vm_address_t low_jump_table;\
+    vm_size_t low_jump_table_size;\
+    vm_address_t high_jump_table;\
+    vm_size_t high_jump_table_size;\
+\
+    // patch info table offset/count:\
+    unsigned info_table_offset;     // offset from data table start\
+    unsigned info_table_count;      // number of items in info table\
+\
+    // string table - a block of data; items in info table contain\
+    // offsets from the start of the string table. Here we have an\
+    // offset to the start of the string table, relative to the start\
+    // of the data table\
+    unsigned string_table_offset;\
+\
+    // one string gets coded in explicitly: its address is needed by\
+    // the stub helper code, and must be 'compiled' in\
+    // not that the size is a multiple of 4 to keep alignment. Padding\
+    // bytes don't matter, so long as the string itself is\
+    // null-terminated.\
+    char bind_fn_sym[24];           // "__rosetta_bind_helper"\
+\
+    // at this point, we place the rosetta stub helper code, which\
+    // includes some static variables:\
+    // unsigned fmwk_ok;\
+    // const char * fmwk_path;      // zero, filled at runtime\
+    // const char * bind_fn_sym;    // addr of var in this header\
+    // void * load_fn;              // address of NSAddImage\
+    // void * sym_fn;               // address of dlsym\
+    // void * bind_fn;              // zero, filled at runtime\
+    // void * table_addr;           // address of this header\
+    unsigned char stub_helper_interface[1]; // actually larger\
+\
+\};\
+
+\f1\fs28 \
+At the start of the stub helper interface code there is another block of variables, including precomputed function addresses. These are both implemented in libSystem, which should load at the same address in memory within every application. These variables are all used directly by the stub helper code, which is why they're part of the assembly block there.\
+\
+The stub helper code does have a couple of instructions into which we have to place an address, however. This is the address of the 
+\f2 stub_helper_interface
+\f1  variable above, the start of its own block. It uses this to access those local variables.\
+\
+The layout of this whole block in memory is therefore:\
+\
+
+\f2 Page One									| Page Two\
+HeaderStruct - Stub Code - Patch Info Table  | String Table\
+
+\f1 \
+
+\f0\b 5. Injection and Overriding\
+
+\f1\b0 The next part uses a standard i386 thread injection process to apply a small block of code which will loop through its parameters: the array from step 3, which are also copied in. Remember that the branch instructions were stored in that array in big-endian format, so this thread needs only to copy things.\
+\
+The C version of the code looks like this:\
+\
+
+\f2\fs24 struct _r_args\
+\{\
+    unsigned int *  addr;\
+    unsigned int    valu;\
+\};\
+\
+void RosettaPatchInstaller( struct _r_args *args,\
+                            unsigned int count,\
+                            void * flag_byte_addr )\
+\{\
+    unsigned int i;\
+    for ( i = 0; i < count; i++ )\
+    \{\
+        // value is big-endian already, addr is native\
+        *(args[i].addr) = args[i].valu;\
+        _mm_clflush( (void *)(args[i].addr) );\
+    \}\
+\
+    *((unsigned char *) flag_byte_addr) = 0xFF;\
+    while ( 1 );\
+\}\
+
+\f1\fs28 \
+It takes three arguments, the last of which is used to signal completion to the injector process. The assembler code puts a one byte of zero at the start of the code block, and it is this that gets set to 
+\f2 0xFF
+\f1  at the end of the function. The reason for this is that the Intel implementation of the 
+\f2 thread_terminate()
+\f1  function within translate is not listed in the symbol table, so we point this code towards it to stop itself. As such, the injector will watch the code block, and when the first byte is set nonzero it will terminate the thread remotely.\
+\
+
+\f0\b 6. Patch Binding at First Call\
+
+\f1\b0 As with the Intel patch code, there are two different templates for the branch islands under the Rosetta injection process. The reentry island is functionally identical to the standard one, with the exception that the modification of r12 is now explicitly coded, since it will always be used. The patch island is a little different since it needs to both store an extra variable at its head and needs to pull data into a couple more registers, ready to pass onto the stub handler interface. Note that these arrays are implemented as byte-arrays, since they need to be identical on both big- and little-endian processors.\
+\
+
+\f2\fs24 static unsigned char rosetta_patch_template[] =\
+\{\
+    0x00,0x00,0x00,0x00,    // .long    branch_target_addr\
+    0x00,0x00,0x00,0x00,    // .long    error_branch_target\
+    0x00,0x00,0x00,0x00,    // .long    patch_table_index\
+    0x3D,0x60,0x00,0x00,    // lis      r11,(msw of this_entry_addr)\
+    0x61,0x6B,0x00,0x00,    // ori      r11,r11,(lsw of this_entry_addr)\
+    0x81,0x8B,0x00,0x00,    // lwz      r12,0(r11)  -- r12 <- branch_target_addr\
+    0x7D,0x6D,0x5B,0x78,    // mr       r13,r11     -- r13 <- address of branch_target_addr\
+    0x81,0xCB,0x00,0x08,    // lwz      r14,8(r11)  -- r14 <- patch_table_index\
+    0x2C,0x0C,0x00,0x00,    // cmpwi    r12,0\
+    0x7D,0x89,0x03,0xA6,    // mtctr    r12\
+    0x4C,0x82,0x04,0x20,    // bnectr\
+    0x81,0x8B,0x00,0x04,    // lwz      r12,4(r11)  -- loads error_branch_target into r12\
+    0x7D,0x89,0x03,0xA6,    // mtctr    r12\
+    0x4E,0x80,0x04,0x20     // bctr                 -- call error handler\
+\};\
+
+\f1\fs28 \
+The first time a patch function is called, it will find its way to the assembly stub function. This is split into two parts: the binder interface and the linker function. The code above leads into the binder interface, which first of all stores all parameter registers on a new stack frame. It then loads the address of its globals table (described at the end of the data table header section above) and checks the value of the 
+\f2 fmwk_ok
+\f1  value. If this is zero, it calls the linker function. This one stores r13 and r14 on the stack, since it'll make function calls itself, and uses the data in the other members of the globals table to call 
+\f2 NSAddImage()
+\f1  and 
+\f2 dlsym()
+\f1 , each time passing a string whose address is also gleaned from the globals table. The address returned by 
+\f2 dlsym()
+\f1  is written into the globals table, and the 
+\f2 fmwk_ok
+\f1  value is set to 1 to indicate that the framework has been loaded. This function restores r13 & r14 before returning to the stub interface function.\
+\
+The stub interface then moves r13 & r14 into r3 & r4 to act as standard parameters, and also reads the address of the data table header from the globals table, passing that as a third parameter. It then loads & branches to the just-loaded bind function proper.\
+\
+The bind function has a few functions to perform, itself. Firstly, if it hasn't been called before, it sets up a few global variables from the data table header: the addresses and sizes of the patch tables themselves, and pointers to a couple of internal data tables. It also initialises a pointer used to array-index the patch info table, and calls 
+\f2 atexit()
+\f1  to get things deallocated when the application quits.\
+\
+Its standard function then kicks in: It looks up the supplied index in the patch info table, and loads the patch bundle it references. It then looks up the address of the patch binding function, and it calls that, passing in the callback which will be used to retrieve the reentry island addresses. This callback follows the branch absolute at the given target function address, and reads the info table index from that island; it then looks up the reentry value from the patch info table.\
+\
+Once this is complete, the only remaining step is to compute the vmaddr_slide of the newly loaded bundle, and to offset the patch function address using that, to compute the absolute patch function address. This is then written back to the patch island through the supplied pointer, such that future calls to that particular patch will go straight through, rather than coming to the bind function again.\
+\
+It also returns this address to the stub helper interface, which loads it into the counter register, restores the parameter registers, removes its stack frame, and branches to it directly.\
+\
+
+\f0\b\fs32 \
+The Complete Overview\
+
+\f1\b0\fs28 This, then is the full process we will use on the injection side:\
+\
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\ql\qnatural\pardirnatural
+\ls5\ilvl0{\listtext	1.	}The injector loads the the bundle/bundles itself, and uses a couple of new entry points to determine what it wants to do:\
+\pard\tx940\tx1440\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li1440\fi-1440\ql\qnatural\pardirnatural
+\ls5\ilvl1{\listtext	i.	}It asks the bundle if it wants to patch the target, giving it a name and a process ID.\
+{\listtext	ii.	}\cf0 If the bundle wants to install patches, it asks for details, providing a callback.\
+\ls5\ilvl1\cf0 {\listtext	iii.	}\cf0 The bundle calls the callback with the name of each patch handler function and the PowerPC address of its target.\
+\pard\tx1660\tx2160\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li2160\fi-2160\ql\qnatural\pardirnatural
+\ls5\ilvl2\cf0 {\listtext	a.	}\cf0 The injector takes the name and looks up the PowerPC address of this handler function.\
+\ls5\ilvl2\cf0 {\listtext	b.	}\cf0 It stores that address, along with the URL for the bundle and the target address, in a data table.\
+\ls5\ilvl2\cf0 {\listtext	c.	}\cf0 It installs a slightly different branch island, which will call a stub binding function, passing in the patch's location in the data table.\cf0 \
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\ql\qnatural\pardirnatural
+\ls5\ilvl0{\listtext	2.	}If any bundles said they wanted to patch anything, it injects some PowerPC code & data:\
+\pard\tx940\tx1440\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li1440\fi-1440\ql\qnatural\pardirnatural
+\ls5\ilvl1{\listtext	i.	}\cf0 First of all, it copies across the (locally-created) blocks containing the branch islands.\
+\ls5\ilvl1\cf0 {\listtext	ii.	}\cf0 Secondly it copies across a large (two pages) data table, whose contents include thing such as:\
+\pard\tx1660\tx2160\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li2160\fi-2160\ql\qnatural\pardirnatural
+\ls5\ilvl2\cf0 {\listtext	\'a5	}\cf0 A table containing patch-info structures, which contain the info from 1.iii.b above.\
+\ls5\ilvl2\cf0 {\listtext	\'a5	}\cf0 A table containing string data (similar to string data in a binary object file).\
+\ls5\ilvl2\cf0 {\listtext	\'a5	}\cf0 Various pointers, used to access these tables.\
+\ls5\ilvl2\cf0 {\listtext	\'a5	}\cf0 The path to the patch framework and the symbol name of the stub binding function proper (written in C).\
+\ls5\ilvl2\cf0 {\listtext	\'a5	}\cf0 The FQPN of the override/injection library, to be passed to dlopen().\
+\ls5\ilvl2\cf0 {\listtext	\'a5	}\cf0 The PowerPC addresses of dlopen() and dlsym().\
+\ls5\ilvl2\cf0 {\listtext	\'a5	}\cf0 The stub helper interface code, written in PowerPC assembler.\cf0 \
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\ql\qnatural\pardirnatural
+\ls5\ilvl0{\listtext	3.	}Lastly it injects some Intel code and a list of address/branch-absolute-instruction pairs as an argument:\
+\pard\tx940\tx1440\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li1440\fi-1440\ql\qnatural\pardirnatural
+\ls5\ilvl1{\listtext	\uc0\u8259 	}\cf0 The Intel code is a small loop which runs through the 2D array it's been provided, atomically copying the instructions to their targets.\cf0 \
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\ql\qnatural\pardirnatural
+\ls5\ilvl0{\listtext	4.	}Since the Intel implementation of thread_terminate() isn't an external symbol in the translate app, the injector watches the first byte of the injected i386 code, and when it's set non-zero (when it's done copying stuff) it will terminate it from there.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\ls5\ilvl0\
+}

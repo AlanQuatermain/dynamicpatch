@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html><head>
+    <title>Patching</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <meta name="generator" content="HeaderDoc">
+<style type="text/css"><!--a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;}--></style></head><body bgcolor="#ffffff">
+<h1><font face="Geneva,Arial,Helvtica">Patching</font></h1><br>
+<a name="//apple_ref/doc/header/Patching.h" title="Patching"></a>
+<hr><br><h2>Functions</h2>
+<a name="HeaderDoc_functions"></a>
+<dl>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/DPCocoaMethodSwizzle" target="_top">DPCocoaMethodSwizzle</a></tt></dt>
+<dd>Patch a function implemented within an Objective-C object.
+</dd>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/DPCreatePatch" target="_top">DPCreatePatch</a></tt></dt>
+<dd>Install a patch funtion on top of an existing function.
+</dd>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/DPRemovePatch" target="_top">DPRemovePatch</a></tt></dt>
+<dd>Removes a patch from the specified function.
+</dd>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/DPCocoaMethodSwizzle;  name=DPCocoaMethodSwizzle -->
+<a name="//apple_ref/doc/compositePage/c/func/DPCocoaMethodSwizzle"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DPCocoaMethodSwizzle">DPCocoaMethodSwizzle</a></h3>
+</td></tr></table><hr><dl></dl><p>Patch a function implemented within an Objective-C object.
+</p>
+<b>See Also:</b><br><blockquote><dl>
+<dt><!-- a logicalPath="//apple_ref/c/func/DPCreatePatch" --><!-- /a --></dt><dd></dd></dl></blockquote>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/DPCocoaMethodSwizzle //apple_ref/c/clm/DPCocoaMethodSwizzle //apple_ref/c/intfcm/DPCocoaMethodSwizzle //apple_ref/c/func/DPCocoaMethodSwizzle //apple_ref/c/ftmplt/DPCocoaMethodSwizzle //apple_ref/c/defn/DPCocoaMethodSwizzle //apple_ref/c/macro/DPCocoaMethodSwizzle" --><font class="function">DPCocoaMethodSwizzle</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">class_name</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">selector_name</font>, 
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> *<font class="param">patch_addr</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/econst/int //apple_ref/c/struct/int //apple_ref/c/clconst/int" --><font class="type">int</font><!-- /a --> <font class="param">class_method</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>class_name</i></code></dt><dd>The name of the class implementing the method to patch.</dd>
+<dt><code><i>selector_name</i></code></dt><dd>A string defining the selector of the method to patch.</dd>
+<dt><code><i>patch_addr</i></code></dt><dd>The address of the patch function.</dd>
+<dt><code><i>class_method</i></code></dt><dd>Pass zero if the method to patch is an instance method, or
+nonzero if it is a class method.</dd>
+</dl>
+</blockquote>
+<dl><dt><i>function result</i></dt><dd>Returns the original implementation address of the specified method. This is
+suitable for calling the original function from within your patch code. It can
+be called at any time, or not at all.
+</dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This function is an alternative to <!-- a logicalPath="//apple_ref/c/func/DPCreatePatch" -->DPCreatePatch <!-- /a --> for
+Objective-C member functions, which does not require any runtime compilation
+of patch code. Instead, it simply rewrites the content of the method table
+for the given object (or category) such that the given patch function address
+is recorded as the implementation address for the object's handler for a
+particular selector.
+<br><br>
+The caller can specify whether to patch a class or instance method.
+<br><br>
+The routine uses the Objective-C runtime itself to perform lookups, and as such
+will check at runtime to see if that is available; if not, this function will
+simply return NULL -- this library does not link against or automatically load
+the Objective-C runtime.
+<br><br>
+See <!-- a logicalPath="//apple_ref/c/func/DPCreatePatch" -->DPCreatePatch <!-- /a --> for a detailed example of how to use 
+the patching routines; in place of the CreatePatch() call, however, you would
+use this function.
+<br><br>
+For example, to patch a method within object 'MyObject' with the prototype:
+<br><br>
+<code>-(void) setName: (NSString *) name ofItem: (int) item;</code>
+<br><br>
+...you would use the following call:
+<br><br>
+<code>original_fn = DPCocoaMethodSwizzle("MyObject", "setName:ofItem:", &patch_fn, 0);</code>
+<br><br>
+Note that, in C terms, an Objective-C function takes two extra parameters, so
+the patch function used above would have the following prototype:
+<br><br>
+<code>void setName_ofItem_patchfn(id _self, SEL _sel, NSString * name, int item);</code>
+<br><br>
+<b>Removing Patches</b>
+Unlike <!-- a logicalPath="//apple_ref/c/func/DPCreatePatch" -->DPCreatePatch <!-- /a -->, there is no
+corresponding 'unpatch' call for this function. Since it only
+overwrites a function address in memory, it can be easily
+reverted to its original value by passing the re-entry address
+(as returned from this function when setting up the patch) back
+into this function. This will have the effect of re-instating
+the original implementation address.
+<br><br>
+NB: Method swizzling generally seems to work as expected.
+However, the Objective-C runtime does maintain a cache of
+method definitions, which can mean that the changed function
+pointer isn't accessed.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/DPCreatePatch;  name=DPCreatePatch -->
+<a name="//apple_ref/doc/compositePage/c/func/DPCreatePatch"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DPCreatePatch">DPCreatePatch</a></h3>
+</td></tr></table><hr><dl></dl><p>Install a patch funtion on top of an existing function.
+</p>
+<b>See Also:</b><br><blockquote><dl>
+<dt><!-- a logicalPath="//apple_ref/c/func/DPRemovePatch" --><!-- /a --></dt><dd></dd><dt><!-- a logicalPath="//apple_ref/c/func/DPCocoaMethodSwizzle" --><!-- /a --></dt><dd></dd></dl></blockquote>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/DPCreatePatch //apple_ref/c/clm/DPCreatePatch //apple_ref/c/intfcm/DPCreatePatch //apple_ref/c/func/DPCreatePatch //apple_ref/c/ftmplt/DPCreatePatch //apple_ref/c/defn/DPCreatePatch //apple_ref/c/macro/DPCreatePatch" --><font class="function">DPCreatePatch</font><!-- /a -->(
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> *<font class="param">fn_addr</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> *<font class="param">patch_addr</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>fn_addr</i></code></dt><dd>The address of the function to patch. This address can be specified
+in one of three ways:<br />
+<ol type="1">
+<li>Pass in 'SomeFunction'</li>
+<li>Pass in '&SomeFunction'</li>
+<li>Pass the return value of FindFunctionAddress("SomeFunction", "SomeModule")
+or FindVagueFunctionAddress("SomeFunction", "SomeModule").</li>
+</ol><br>
+will likely be necessary to use method 3 to lookup the addresses in the
+symbol table of the module which defines them.</li></ol></dd>
+<dt><code><i>patch_addr</i></code></dt><dd>The address of the user-defined patch function. This should be passed
+in using methods 1 or 2 above (3 won't be necessary). For safety's sake, it is
+recommended that patch functions all reside in one file, along with any routines
+which install them, and that these patch functions are declared static (C-style
+static, accessible only from this file) to avoid potentially harmful namespace
+pollution, or the potential for the patch function to be called directly.
+<br><br></dd>
+</dl>
+</blockquote>
+<dl><dt><i>function result</i></dt><dd>This function returns an address which can be used to call the original function.
+Note that this is NOT the same as the address of the original function - it is 
+actually the address of a 'jump table' entry which will ultimately branch into
+the original function's implementation without going to the patch code first.
+ </dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This routine will patch an existing function. It takes the address
+of the function to patch, along with the address of a replacement function.
+<br><br>
+The patch function should be declared in exactly the same manner as the
+function it is designed to patch. So, if the original function has Pascal
+linkage, so should the new one. If the original function was C++, the new
+one should also be C++; in general, C and C++ seem interchangeable
+on Mac OS X, however.
+<br><br>
+This function works by installing a 'head patch'. The internal implementation
+overwrites the first instruction of the target function with a branch 
+instruction which will lead to a small error-checking 'jump table' entry - 
+a small chunk of compiled code which will ultimately call the provided patch 
+function. The patch function can call the original function through the
+pointer returned from this routine - it should NOT just call the original
+function, as that will ultimately just call the patch again.
+<br><br>
+There are no limits on where in a patch funtion the original can be called. 
+In this manner, it is possible to implement a pseudo-tail patch, simply by
+writing the patch function such that the first thing it does is to call the 
+original function.
+<br><br>
+For Example:<br />
+        <pre>
+        // Function to patch.
+extern int SomeFunction( float a, int * b );
+&lt;br&gt;&lt;br&gt;
+// Typedef a pointer to that function
+typedef ( *SomeFunction_Ptr )( float a, int * b );
+&lt;br&gt;&lt;br&gt;
+// create somewhere to store returned 'original function pointer'
+static SomeFunction_Ptr gSomeFunction = NULL;
+&lt;br&gt;&lt;br&gt;
+// define our patch function
+static int SomeFunction_Patch( float a, int * b )
+{
+    if ( a &lt; 1.0f )
+        a += 1.0f;
+&lt;br&gt;&lt;br&gt;
+    if ( *b &gt; 10 )
+        *b = 10;
+&lt;br&gt;&lt;br&gt;
+    // if this function has been called, the patch worked & this pointer
+    //  is guaranteed to be valid.
+    return ( gSomeFunction( a, b ) );
+}
+&lt;br&gt;&lt;br&gt;
+// routine to install the patch
+void InstallPatch
+{
+    void * fn_addr = &SomeFunction;
+&lt;br&gt;&lt;br&gt;
+    if ( fn_addr == NULL )
+    {
+        // linker couldn't find function address - look using API
+        // Use the 'exact' version, since this is not a C++ function
+        //  with a mangled name
+        fn_addr = LookupExactFunctionAddress( "SomeFunction", "SomeModule" );
+    }
+&lt;br&gt;&lt;br&gt;
+    if ( fn_addr != NULL )
+    {
+        gSomeFunction = DPCreatePatch( fn_addr, &SomeFunction_Patch );
+    }
+}<br>
+</pre>
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/DPRemovePatch;  name=DPRemovePatch -->
+<a name="//apple_ref/doc/compositePage/c/func/DPRemovePatch"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DPRemovePatch">DPRemovePatch</a></h3>
+</td></tr></table><hr><dl></dl><p>Removes a patch from the specified function.
+</p>
+<b>See Also:</b><br><blockquote><dl>
+<dt><!-- a logicalPath="//apple_ref/c/func/DPCreatePatch" --><!-- /a --></dt><dd></dd></dl></blockquote>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/DPRemovePatch //apple_ref/c/clm/DPRemovePatch //apple_ref/c/intfcm/DPRemovePatch //apple_ref/c/func/DPRemovePatch //apple_ref/c/ftmplt/DPRemovePatch //apple_ref/c/defn/DPRemovePatch //apple_ref/c/macro/DPRemovePatch" --><font class="function">DPRemovePatch</font><!-- /a -->(
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> *<font class="param">fn_addr</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>fn_addr</i></code></dt><dd>The address of the original (patched) function, from
+which to remove the patch.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This will remove a patch installed by the
+<!-- a logicalPath="//apple_ref/c/func/DPCreatePatch" -->DPCreatePatch <!-- /a --> instruction. It does
+this by following the patch branch instruction to the re-entry
+table, reading the saved instruction(s) from there, and
+putting them back into the patched function.
+</p>
+</dl>
+<p><p>&#169; 2003-2006 Jim Dovey. Some Rights Reserved.
+ (Last Updated November 06, 2006)
+</p></body></html>

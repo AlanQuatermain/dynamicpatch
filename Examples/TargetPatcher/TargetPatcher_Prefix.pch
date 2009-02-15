@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'TargetPatcher' target in the 'TargetPatcher' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

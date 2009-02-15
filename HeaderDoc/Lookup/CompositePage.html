@@ -1,0 +1,351 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html><head>
+    <title>Lookup</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <meta name="generator" content="HeaderDoc">
+<style type="text/css"><!--a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;}--></style></head><body bgcolor="#ffffff">
+<h1><font face="Geneva,Arial,Helvtica">Lookup</font></h1><br>
+<a name="//apple_ref/doc/header/Lookup.h" title="Lookup"></a>
+<hr><br><h2>Functions</h2>
+<a name="HeaderDoc_functions"></a>
+<dl>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/DPFindFunctionAddress" target="_top">DPFindFunctionAddress</a></tt></dt>
+<dd>Look up the address of a function.
+</dd>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/DPFindFunctionForArchitecture" target="_top">DPFindFunctionForArchitecture</a></tt></dt>
+<dd>Lookup a function-symbol address for a specified CPU architecture.
+</dd>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/DPFindVagueFunctionAddress" target="_top">DPFindVagueFunctionAddress</a></tt></dt>
+<dd>Look up the address of a function with a potentially mangled name.
+</dd>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/DPLookupCocoaFunctionAddress" target="_top">DPLookupCocoaFunctionAddress</a></tt></dt>
+<dd>Look up the address of an Objective-C instance method.
+</dd>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/DPLookupCocoaFunctionAddressFromDeclaration" target="_top">DPLookupCocoaFunctionAddressFromDeclaration</a></tt></dt>
+<dd>Look up the address of an Objective-C instance method.
+</dd>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/FindFunctionForArchitecture" target="_top">FindFunctionForArchitecture</a></tt></dt>
+<dd>Lookup a function-symbol address for a specified CPU architecture.
+</dd>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/LookupCocoaFunctionAddress" target="_top">LookupCocoaFunctionAddress</a></tt></dt>
+<dd>Look up the address of an Objective-C instance method.
+</dd>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/LookupCocoaFunctionAddressFromDeclaration" target="_top">LookupCocoaFunctionAddressFromDeclaration</a></tt></dt>
+<dd>Look up the address of an Objective-C instance method.
+</dd>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/DPFindFunctionAddress;  name=DPFindFunctionAddress -->
+<a name="//apple_ref/doc/compositePage/c/func/DPFindFunctionAddress"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DPFindFunctionAddress">DPFindFunctionAddress</a></h3>
+</td></tr></table><hr><dl></dl><p>Look up the address of a function.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/DPFindFunctionAddress //apple_ref/c/clm/DPFindFunctionAddress //apple_ref/c/intfcm/DPFindFunctionAddress //apple_ref/c/func/DPFindFunctionAddress //apple_ref/c/ftmplt/DPFindFunctionAddress //apple_ref/c/defn/DPFindFunctionAddress //apple_ref/c/macro/DPFindFunctionAddress" --><font class="function">DPFindFunctionAddress</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pExactFunctionName</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pModuleName</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>pExactFunctionName</i></code></dt><dd>Name of the function for which to search.</dd>
+<dt><code><i>pModuleName</i></code></dt><dd>Name of the module (library, bundle) which defines the function.</dd>
+</dl>
+</blockquote>
+<dl><dt><i>function result</i></dt><dd>The address of the desired function.
+ </dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This function will lookup the address for a specified function in the 
+symbol table of the given module. It performs an exact, case-sensitive
+comparison using strcmp(), and as such can only be used with C++ functions
+if it is supplied with the C++ compiler's mangled name for a C++ function.
+<br><br>
+See <!-- a logicalPath="//apple_ref/c/func/LookupFunctionAddress" -->LookupFunctionAddress <!-- /a -->
+for more information on looking up address for C++ functions.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/DPFindFunctionForArchitecture;  name=DPFindFunctionForArchitecture -->
+<a name="//apple_ref/doc/compositePage/c/func/DPFindFunctionForArchitecture"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DPFindFunctionForArchitecture">DPFindFunctionForArchitecture</a></h3>
+</td></tr></table><hr><dl></dl><p>Lookup a function-symbol address for a specified CPU architecture.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/DPFindFunctionForArchitecture //apple_ref/c/clm/DPFindFunctionForArchitecture //apple_ref/c/intfcm/DPFindFunctionForArchitecture //apple_ref/c/func/DPFindFunctionForArchitecture //apple_ref/c/ftmplt/DPFindFunctionForArchitecture //apple_ref/c/defn/DPFindFunctionForArchitecture //apple_ref/c/macro/DPFindFunctionForArchitecture" --><font class="function">DPFindFunctionForArchitecture</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pName</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pModule</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/econst/int //apple_ref/c/struct/int //apple_ref/c/clconst/int" --><font class="type">int</font><!-- /a --> <font class="param">arch</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>pName</i></code></dt><dd>Name of the function to locate (a symbol name, minus any leading underscore).</dd>
+<dt><code><i>pModule</i></code></dt><dd>Name of the module which defines the function -- the original will be
+loaded from disk to be searched. You can pass a fully-qualified path to a new
+module (beginning with a '/' character) to arbitrarily load a binary to search.</dd>
+<dt><code><i>arch</i></code></dt><dd>A <!-- a logicalPath="//apple_ref/c/tag/PlatformArchitectureConstants" -->constant <!-- /a -->
+specifying which architecture within a fat binary to search for the named function.
+<br><br></dd>
+</dl>
+</blockquote>
+<dl><dt><i>function result</i></dt><dd>The address of the named function, or NULL if not found.
+</dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This is essentially analogous to
+<!-- a logicalPath="//apple_ref/c/func/LookupExactFunctionAddress" -->LookupExactFunctionAddress <!-- /a -->,
+with the addition of one extra parameter. This will cause the lookup engine
+to search within a fat binary for the architecture specified, and will
+then look for the symbol within that particular file, performing any necessary
+byte-swapping.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/DPFindVagueFunctionAddress;  name=DPFindVagueFunctionAddress -->
+<a name="//apple_ref/doc/compositePage/c/func/DPFindVagueFunctionAddress"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DPFindVagueFunctionAddress">DPFindVagueFunctionAddress</a></h3>
+</td></tr></table><hr><dl></dl><p>Look up the address of a function with a potentially mangled name.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/DPFindVagueFunctionAddress //apple_ref/c/clm/DPFindVagueFunctionAddress //apple_ref/c/intfcm/DPFindVagueFunctionAddress //apple_ref/c/func/DPFindVagueFunctionAddress //apple_ref/c/ftmplt/DPFindVagueFunctionAddress //apple_ref/c/defn/DPFindVagueFunctionAddress //apple_ref/c/macro/DPFindVagueFunctionAddress" --><font class="function">DPFindVagueFunctionAddress</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pFunctionName</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pModuleName</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>pFunctionName</i></code></dt><dd>Name of the function for which to search.</dd>
+<dt><code><i>pModuleName</i></code></dt><dd>Name of the module (library, bundle) which defines the function.</dd>
+</dl>
+</blockquote>
+<dl><dt><i>function result</i></dt><dd>The address of the desired function.
+ </dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This function will look for the function name given, inside the named
+code module, using strstr() as a comparison tool. It was created to support
+searching for functions whose names may have been mangled by a C++ compiler.
+<br><br>
+The named module will NOT be loaded into the address space of the program by
+this call - it is assumed to already be there; if it isn't, no search will
+take place.
+<br><br>
+The supplied function name will be compared against public and private 
+symbols declared in the given module using strstr(). This is to support 
+patches which may find themselves needing to patch C++ routines which may 
+have been built by different compilers (with different name mangling, 
+resulting in different symbol names). For instance, GCC 3.1 and GCC 3.3 both 
+use a different C++ ABI, with different function name mangling. This can 
+ultimately lead to C++ functions built into the 10.2 version of OS X to have 
+different symbol names to those in 10.3. Therefore, this function allows the 
+caller to specify the 'real' name of the C++ function for which to search, 
+and it should return the address of the correct function, regardless of name 
+mangling.
+<br><br>
+However, this function is fundamentally unable to tell the difference between
+SomeFunc(int) and SomeFunc(float), since they will both contain the function
+name 'SomeFunc'. It will therefore return the address of the first function it
+finds. As such, it is strongly recommended to use LookupExactFunctionAddress(),
+passing the C++-mangled name of the function for which to search - this name
+can be found by using the 'nm' command line tool, as follows:<br />
+        <pre>
+ nm /path/to/module_executable | grep "SomeFunc"
+ 
+</pre>
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/DPLookupCocoaFunctionAddress;  name=DPLookupCocoaFunctionAddress -->
+<a name="//apple_ref/doc/compositePage/c/func/DPLookupCocoaFunctionAddress"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DPLookupCocoaFunctionAddress">DPLookupCocoaFunctionAddress</a></h3>
+</td></tr></table><hr><dl></dl><p>Look up the address of an Objective-C instance method.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/DPLookupCocoaFunctionAddress //apple_ref/c/clm/DPLookupCocoaFunctionAddress //apple_ref/c/intfcm/DPLookupCocoaFunctionAddress //apple_ref/c/func/DPLookupCocoaFunctionAddress //apple_ref/c/ftmplt/DPLookupCocoaFunctionAddress //apple_ref/c/defn/DPLookupCocoaFunctionAddress //apple_ref/c/macro/DPLookupCocoaFunctionAddress" --><font class="function">DPLookupCocoaFunctionAddress</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pClass</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pSelector</font>, 
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/econst/int //apple_ref/c/struct/int //apple_ref/c/clconst/int" --><font class="type">int</font><!-- /a --> <font class="param">class_method</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>pClass</i></code></dt><dd>The name of the class implementing the function.</dd>
+<dt><code><i>pSelector</i></code></dt><dd>The text of the selector for which to search.</dd>
+<dt><code><i>class_method</i></code></dt><dd>Set to zero if the sought function is an instance
+method, or non-zero to search for a class method.
+<br><br></dd>
+</dl>
+</blockquote>
+<dl><dt><i>function result</i></dt><dd>The address of the function implementation.
+ </dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This function will lookup the address of an instance method in an
+Objective-C object. It uses the Objective-C runtime APIs, and as such can 
+only operate if the Objective-C runtime is loaded into this process.
+<br><br>
+This version of the method takes separate class and selector
+strings, and therefore gets to skip the parse step utilized by
+the function above.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/DPLookupCocoaFunctionAddressFromDeclaration;  name=DPLookupCocoaFunctionAddressFromDeclaration -->
+<a name="//apple_ref/doc/compositePage/c/func/DPLookupCocoaFunctionAddressFromDeclaration"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DPLookupCocoaFunctionAddressFromDeclaration">DPLookupCocoaFunctionAddressFromDeclaration</a></h3>
+</td></tr></table><hr><dl></dl><p>Look up the address of an Objective-C instance method.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/clm/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/intfcm/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/func/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/ftmplt/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/defn/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/macro/DPLookupCocoaFunctionAddressFromDeclaration" --><font class="function">DPLookupCocoaFunctionAddressFromDeclaration</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pCocoaDeclaration</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>pCocoaDeclaration</i></code></dt><dd>The Objective-C-style declaration of the function.
+<br><br>
+For example, use <tt>-[NSObject selector:with:arguments]</tt> to look up
+an instance method, or <tt>+[NSObject classSelector:object:]</tt>. to
+look up a class method. 
+<br><br>
+Note the following rules:<br />
+<ul type="disc">
+<li>MUST begin with '-' or '+'; no default is assumed.</li>
+<li>The remainder MUST be surrounded by square braces ([]).</li>
+<li>The first whole word inside the square braces is the class name.</li>
+<li>It next whole word is the selector, with no spaces or types.</li>
+</ul>
+<br><br></dd>
+</dl>
+</blockquote>
+<dl><dt><i>function result</i></dt><dd>The address of the function implementation.
+ </dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This function will lookup the address of an instance method in an
+Objective-C object. It uses the Objective-C runtime APIs, and as such can 
+only operate if the Objective-C runtime is loaded into this process.
+<br><br>
+Internally, it parses the given method signature, and proceeds to lookup
+the class object, then creates an Objective-C selector and looks up the
+address of the routine in the given class which implements it.
+<br><br>
+This function will NOT find subclass implementation, nor superclass
+implementations. It is therefore important that in order to patch the
+'performClick:' method of any NSSecureTextField objects, that the actual
+class which implements the 'performClick:' method is patched. If
+NSSecureTextField does not implement this function, then this routine
+should be called with the superclass (NSTextField), or that class's
+superclass (NSControl), to find the address of its implementation.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/FindFunctionForArchitecture;  name=FindFunctionForArchitecture -->
+<a name="//apple_ref/doc/compositePage/c/func/FindFunctionForArchitecture"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="FindFunctionForArchitecture">FindFunctionForArchitecture</a></h3>
+</td></tr></table><hr><dl></dl><p>Lookup a function-symbol address for a specified CPU architecture.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/DPFindFunctionForArchitecture //apple_ref/c/clm/DPFindFunctionForArchitecture //apple_ref/c/intfcm/DPFindFunctionForArchitecture //apple_ref/c/func/DPFindFunctionForArchitecture //apple_ref/c/ftmplt/DPFindFunctionForArchitecture //apple_ref/c/defn/DPFindFunctionForArchitecture //apple_ref/c/macro/DPFindFunctionForArchitecture" --><font class="function">DPFindFunctionForArchitecture</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pName</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pModule</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/econst/int //apple_ref/c/struct/int //apple_ref/c/clconst/int" --><font class="type">int</font><!-- /a --> <font class="param">arch</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>pName</i></code></dt><dd>Name of the function to locate (a symbol name, minus any leading underscore).</dd>
+<dt><code><i>pModule</i></code></dt><dd>Name of the module which defines the function -- the original will be
+loaded from disk to be searched. You can pass a fully-qualified path to a new
+module (beginning with a '/' character) to arbitrarily load a binary to search.</dd>
+<dt><code><i>arch</i></code></dt><dd>A <!-- a logicalPath="//apple_ref/c/tag/PlatformArchitectureConstants" -->constant <!-- /a -->
+specifying which architecture within a fat binary to search for the named function.
+<br><br></dd>
+</dl>
+</blockquote>
+<dl><dt><i>function result</i></dt><dd>The address of the named function, or NULL if not found.
+</dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This is essentially analogous to
+<!-- a logicalPath="//apple_ref/c/func/LookupExactFunctionAddress" -->LookupExactFunctionAddress <!-- /a -->,
+with the addition of one extra parameter. This will cause the lookup engine
+to search within a fat binary for the architecture specified, and will
+then look for the symbol within that particular file, performing any necessary
+byte-swapping.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/LookupCocoaFunctionAddress;  name=LookupCocoaFunctionAddress -->
+<a name="//apple_ref/doc/compositePage/c/func/LookupCocoaFunctionAddress"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="LookupCocoaFunctionAddress">LookupCocoaFunctionAddress</a></h3>
+</td></tr></table><hr><dl></dl><p>Look up the address of an Objective-C instance method.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/DPLookupCocoaFunctionAddress //apple_ref/c/clm/DPLookupCocoaFunctionAddress //apple_ref/c/intfcm/DPLookupCocoaFunctionAddress //apple_ref/c/func/DPLookupCocoaFunctionAddress //apple_ref/c/ftmplt/DPLookupCocoaFunctionAddress //apple_ref/c/defn/DPLookupCocoaFunctionAddress //apple_ref/c/macro/DPLookupCocoaFunctionAddress" --><font class="function">DPLookupCocoaFunctionAddress</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pClass</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pSelector</font>, 
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/econst/int //apple_ref/c/struct/int //apple_ref/c/clconst/int" --><font class="type">int</font><!-- /a --> <font class="param">class_method</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>pClass</i></code></dt><dd>The name of the class implementing the function.</dd>
+<dt><code><i>pSelector</i></code></dt><dd>The text of the selector for which to search.</dd>
+<dt><code><i>class_method</i></code></dt><dd>Set to zero if the sought function is an instance
+method, or non-zero to search for a class method.
+<br><br></dd>
+</dl>
+</blockquote>
+<dl><dt><i>function result</i></dt><dd>The address of the function implementation.
+ </dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This function will lookup the address of an instance method in an
+Objective-C object. It uses the Objective-C runtime APIs, and as such can 
+only operate if the Objective-C runtime is loaded into this process.
+<br><br>
+This version of the method takes separate class and selector
+strings, and therefore gets to skip the parse step utilized by
+the function above.
+</p>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/LookupCocoaFunctionAddressFromDeclaration;  name=LookupCocoaFunctionAddressFromDeclaration -->
+<a name="//apple_ref/doc/compositePage/c/func/LookupCocoaFunctionAddressFromDeclaration"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="LookupCocoaFunctionAddressFromDeclaration">LookupCocoaFunctionAddressFromDeclaration</a></h3>
+</td></tr></table><hr><dl></dl><p>Look up the address of an Objective-C instance method.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <font class="type">*</font> <!-- a logicalPath="//apple_ref/c/instm/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/clm/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/intfcm/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/func/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/ftmplt/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/defn/DPLookupCocoaFunctionAddressFromDeclaration //apple_ref/c/macro/DPLookupCocoaFunctionAddressFromDeclaration" --><font class="function">DPLookupCocoaFunctionAddressFromDeclaration</font><!-- /a -->(
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">pCocoaDeclaration</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>pCocoaDeclaration</i></code></dt><dd>The Objective-C-style declaration of the function.
+<br><br>
+For example, use <tt>-[NSObject selector:with:arguments]</tt> to look up
+an instance method, or <tt>+[NSObject classSelector:object:]</tt>. to
+look up a class method. 
+<br><br>
+Note the following rules:<br />
+<ul type="disc">
+<li>MUST begin with '-' or '+'; no default is assumed.</li>
+<li>The remainder MUST be surrounded by square braces ([]).</li>
+<li>The first whole word inside the square braces is the class name.</li>
+<li>It next whole word is the selector, with no spaces or types.</li>
+</ul>
+<br><br></dd>
+</dl>
+</blockquote>
+<dl><dt><i>function result</i></dt><dd>The address of the function implementation.
+ </dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This function will lookup the address of an instance method in an
+Objective-C object. It uses the Objective-C runtime APIs, and as such can 
+only operate if the Objective-C runtime is loaded into this process.
+<br><br>
+Internally, it parses the given method signature, and proceeds to lookup
+the class object, then creates an Objective-C selector and looks up the
+address of the routine in the given class which implements it.
+<br><br>
+This function will NOT find subclass implementation, nor superclass
+implementations. It is therefore important that in order to patch the
+'performClick:' method of any NSSecureTextField objects, that the actual
+class which implements the 'performClick:' method is patched. If
+NSSecureTextField does not implement this function, then this routine
+should be called with the superclass (NSTextField), or that class's
+superclass (NSControl), to find the address of its implementation.
+</p>
+</dl>
+<h2>Enumerations</h2>
+<hr><!-- headerDoc=tag;  uid=//apple_ref/doc/compositePage/c/tag/Platform%32Architecture%32Constants;  name=PlatformArchitectureConstants -->
+<a name="//apple_ref/doc/compositePage/c/tag/Platform%32Architecture%32Constants"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="Platform%32Architecture%32Constants">Platform Architecture Constants</a></h3>
+</td></tr></table><hr><dl></dl><blockquote><pre><font class="keyword">enum</font> { 
+    <!-- a logicalPath="//apple_ref/c/cl/kInsertionArchPPC //apple_ref/c/cl/kInsertionArchPPC //apple_ref/c/tdef/kInsertionArchPPC //apple_ref/c/tag/kInsertionArchPPC //apple_ref/c/econst/kInsertionArchPPC //apple_ref/c/struct/kInsertionArchPPC //apple_ref/c/clconst/kInsertionArchPPC" --><font class="type">kInsertionArchPPC</font><!-- /a --> = <font class="number">0</font>, 
+    <!-- a logicalPath="//apple_ref/c/cl/kInsertionArchIA32 //apple_ref/c/cl/kInsertionArchIA32 //apple_ref/c/tdef/kInsertionArchIA32 //apple_ref/c/tag/kInsertionArchIA32 //apple_ref/c/econst/kInsertionArchIA32 //apple_ref/c/struct/kInsertionArchIA32 //apple_ref/c/clconst/kInsertionArchIA32" --><font class="type">kInsertionArchIA32</font><!-- /a --> = <font class="number">1</font>  
+}; </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Constants</font></h5>
+<blockquote>
+<dl>
+<dt><code>kInsertionArchPPC</code></dt><dd>PowerPC architecture</dd>
+<dt><code>kInsertionArchIA32</code></dt><dd>IA-32 (i386+) architecture</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>These constants are mostly used when 
+injecting PPC code into a Rosetta process. However, those functions
+also require cross-architecture function address lookups for finding
+PPC addresses from Intel code. As such, the constans are defined here
+and are passed to
+<!-- a logicalPath="//apple_ref/c/func/FindFunctionForArchitecture" -->FindFunctionForArchitecture <!-- /a -->
+to enable those lookups.
+ </p>
+</dl>
+<p><p>&#169; 2003-2006 Jim Dovey. Some Rights Reserved.
+ (Last Updated November 06, 2006)
+</p></body></html>

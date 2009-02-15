@@ -1,0 +1,237 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html><head>
+    <title>Injection</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <meta name="generator" content="HeaderDoc">
+<style type="text/css"><!--a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;}--></style></head><body bgcolor="#ffffff">
+<h1><font face="Geneva,Arial,Helvtica">Injection</font></h1><br>
+<a name="//apple_ref/doc/header/Injection.h" title="Injection"></a>
+<hr><br><h2>Functions</h2>
+<a name="HeaderDoc_functions"></a>
+<dl>
+<dt><tt><a href="CompositePage.html#//apple_ref/doc/compositePage/c/func/DPPatchRemoteTask" target="_top">DPPatchRemoteTask</a></tt></dt>
+<dd>Starts a thread in the given mach task.
+</dd>
+</dl>
+<hr><!-- headerDoc=func;  uid=//apple_ref/doc/compositePage/c/func/DPPatchRemoteTask;  name=DPPatchRemoteTask -->
+<a name="//apple_ref/doc/compositePage/c/func/DPPatchRemoteTask"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="DPPatchRemoteTask">DPPatchRemoteTask</a></h3>
+</td></tr></table><hr><dl></dl><p>Starts a thread in the given mach task.
+</p>
+<blockquote><pre> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <!-- a logicalPath="//apple_ref/c/instm/DPPatchRemoteTask //apple_ref/c/clm/DPPatchRemoteTask //apple_ref/c/intfcm/DPPatchRemoteTask //apple_ref/c/func/DPPatchRemoteTask //apple_ref/c/ftmplt/DPPatchRemoteTask //apple_ref/c/defn/DPPatchRemoteTask //apple_ref/c/macro/DPPatchRemoteTask" --><font class="function">DPPatchRemoteTask</font><!-- /a -->(
+    <!-- a logicalPath="//apple_ref/c/cl/pid_t //apple_ref/c/cl/pid_t //apple_ref/c/tdef/pid_t //apple_ref/c/tag/pid_t //apple_ref/c/econst/pid_t //apple_ref/c/struct/pid_t //apple_ref/c/clconst/pid_t" --><font class="type">pid_t</font><!-- /a --> <font class="param">pid</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">path_to_patch</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl>
+<dt><code><i>pid</i></code></dt><dd>The process ID of the process to patch.</dd>
+<dt><code><i>path_to_patch</i></code></dt><dd>The path to a specific single patch bundle to
+load. Can be NULL.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>Calling this function will begin a new thread in the given
+task, which will then proceed to load one or more patch
+bundles. If the second (optional) parameter is NULL, then all
+bundles in the ControlPlugins folder will be loaded. Otherwise,
+the bundle at the supplied path will be loaded.
+<br><br>
+For processes running via Rosetta translation, the method is
+slightly different. Instead of inserting some startup code in
+a new thread, then making that new thread do the work of
+loading and installing the patches, the injection process must
+do most of the work. So, the injection process will load each
+patch in turn, call its check function to see if it should
+load into the target process, and if so, gets a list of
+functions to patch. It then sets up patch blocks for these,
+with branch targets initially pointing to a stub helper
+function which will load the relevant bundle & libraries. It
+then creates a new thread (which will run in the host
+architecture) and pass it a list of these patches. That
+routine will then atomically patch these functions before
+exiting.
+</p>
+</dl>
+<h2>Typedefs</h2>
+<hr><!-- headerDoc=tdef;  uid=//apple_ref/doc/compositePage/c/tdef/__bundle_start_fn;  name=__bundle_start_fn -->
+<a name="//apple_ref/doc/compositePage/c/tdef/__bundle_start_fn"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="__bundle_start_fn">__bundle_start_fn</a></h3>
+</td></tr></table><hr><dl></dl><p>Function type for native patch bundle entry point.
+</p>
+<blockquote><pre><font class="keyword">typedef</font> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/econst/int //apple_ref/c/struct/int //apple_ref/c/clconst/int" --><font class="type">int</font><!-- /a --> (*<!-- a logicalPath="//apple_ref/c/instm/__bundle_start_fn //apple_ref/c/clm/__bundle_start_fn //apple_ref/c/intfcm/__bundle_start_fn //apple_ref/c/func/__bundle_start_fn //apple_ref/c/ftmplt/__bundle_start_fn //apple_ref/c/defn/__bundle_start_fn //apple_ref/c/macro/__bundle_start_fn" --><font class="function">__bundle_start_fn</font><!-- /a -->)(
+    <!-- a logicalPath="//apple_ref/c/cl/CFBundleRef //apple_ref/c/cl/CFBundleRef //apple_ref/c/tdef/CFBundleRef //apple_ref/c/tag/CFBundleRef //apple_ref/c/econst/CFBundleRef //apple_ref/c/struct/CFBundleRef //apple_ref/c/clconst/CFBundleRef" --><font class="type">CFBundleRef</font><!-- /a --> <font class="param">b</font>); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl><dt><code>b</code></dt><dd>The patch bundle's object.</dd>
+</dl>
+</blockquote>
+<dl><dt><i> result</i></dt><dd>Return 1 to stay in memory, 0 to be unloaded.
+ </dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>Upon being loaded by this API, the bundle is expected to
+export a function whose name matches the value of
+<!-- a logicalPath="//apple_ref/c/macro/kStartFunctionName" -->kStartFunctionName <!-- /a -->. It
+should conform to this prototype.
+</p>
+</dl>
+<hr><!-- headerDoc=tdef;  uid=//apple_ref/doc/compositePage/c/tdef/__bundle_will_patch_fn;  name=__bundle_will_patch_fn -->
+<a name="//apple_ref/doc/compositePage/c/tdef/__bundle_will_patch_fn"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="__bundle_will_patch_fn">__bundle_will_patch_fn</a></h3>
+</td></tr></table><hr><dl></dl><p>Prototype for Rosetta patch bundles.
+</p>
+<blockquote><pre><font class="keyword">typedef</font> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/econst/int //apple_ref/c/struct/int //apple_ref/c/clconst/int" --><font class="type">int</font><!-- /a --> (*<!-- a logicalPath="//apple_ref/c/instm/__bundle_will_patch_fn //apple_ref/c/clm/__bundle_will_patch_fn //apple_ref/c/intfcm/__bundle_will_patch_fn //apple_ref/c/func/__bundle_will_patch_fn //apple_ref/c/ftmplt/__bundle_will_patch_fn //apple_ref/c/defn/__bundle_will_patch_fn //apple_ref/c/macro/__bundle_will_patch_fn" --><font class="function">__bundle_will_patch_fn</font><!-- /a -->)(
+    <!-- a logicalPath="//apple_ref/c/cl/CFBundleRef //apple_ref/c/cl/CFBundleRef //apple_ref/c/tdef/CFBundleRef //apple_ref/c/tag/CFBundleRef //apple_ref/c/econst/CFBundleRef //apple_ref/c/struct/CFBundleRef //apple_ref/c/clconst/CFBundleRef" --><font class="type">CFBundleRef</font><!-- /a --> <font class="param">b</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/pid_t //apple_ref/c/cl/pid_t //apple_ref/c/tdef/pid_t //apple_ref/c/tag/pid_t //apple_ref/c/econst/pid_t //apple_ref/c/struct/pid_t //apple_ref/c/clconst/pid_t" --><font class="type">pid_t</font><!-- /a --> <font class="param">p</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">a</font>); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl><dt><code>b</code></dt><dd>The bundle object for the patch bundle.</dd>
+<dt><code>p</code></dt><dd>The ID of the target process.</dd>
+<dt><code>a</code></dt><dd>The name of the target process.</dd>
+</dl>
+</blockquote>
+<dl><dt><i> result</i></dt><dd>Return 1 if you will patch the target, 0 otherwise.
+ </dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>The patching system expects to find a function whose name
+matches the value of
+<!-- a logicalPath="//apple_ref/c/macro/kWillPatchFunctionName" -->kWillPatchFunctionName <!-- /a -->,
+which should conform to this prototype.
+</p>
+</dl>
+<hr><!-- headerDoc=tdef;  uid=//apple_ref/doc/compositePage/c/tdef/__get_patch_details_fn;  name=__get_patch_details_fn -->
+<a name="//apple_ref/doc/compositePage/c/tdef/__get_patch_details_fn"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="__get_patch_details_fn">__get_patch_details_fn</a></h3>
+</td></tr></table><hr><dl></dl><p>Prototype for a function used to get Rosetta patch details.
+</p>
+<blockquote><pre><font class="keyword">typedef</font> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> (*<!-- a logicalPath="//apple_ref/c/instm/__get_patch_details_fn //apple_ref/c/clm/__get_patch_details_fn //apple_ref/c/intfcm/__get_patch_details_fn //apple_ref/c/func/__get_patch_details_fn //apple_ref/c/ftmplt/__get_patch_details_fn //apple_ref/c/defn/__get_patch_details_fn //apple_ref/c/macro/__get_patch_details_fn" --><font class="function">__get_patch_details_fn</font><!-- /a -->)(
+    <!-- a logicalPath="//apple_ref/c/cl/__patch_details_cb //apple_ref/c/cl/__patch_details_cb //apple_ref/c/tdef/__patch_details_cb //apple_ref/c/tag/__patch_details_cb //apple_ref/c/econst/__patch_details_cb //apple_ref/c/struct/__patch_details_cb //apple_ref/c/clconst/__patch_details_cb" --><font class="type">__patch_details_cb</font><!-- /a --> <font class="param">cb</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/econst/int //apple_ref/c/struct/int //apple_ref/c/clconst/int" --><font class="type">int</font><!-- /a --> <font class="param">arch</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> *<font class="param">info</font>); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl><dt><code>cb</code></dt><dd>The function to call with details of each prospective patch.</dd>
+<dt><code>arch</code></dt><dd>The architecture to use when looking up function addresses.</dd>
+<dt><code>info</code></dt><dd>This should be passed back into the callback untouched.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>The Rosetta patching implementation will look for a
+function whose name matches the value of
+<!-- a logicalPath="//apple_ref/c/macro/kGetPatchDetailsFunctionName" -->kGetPatchDetailsFunctionName <!-- /a -->
+within the patch bundle. It will then call that function,
+providing a callback the bundle can use to tell the injector
+which functions to patch.
+</p>
+</dl>
+<hr><!-- headerDoc=tdef;  uid=//apple_ref/doc/compositePage/c/tdef/__patch_details_cb;  name=__patch_details_cb -->
+<a name="//apple_ref/doc/compositePage/c/tdef/__patch_details_cb"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="__patch_details_cb">__patch_details_cb</a></h3>
+</td></tr></table><hr><dl></dl><p>A callback, used by a Rosetta patch bundle.
+</p>
+<blockquote><pre><font class="keyword">typedef</font> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> (*<!-- a logicalPath="//apple_ref/c/instm/__patch_details_cb //apple_ref/c/clm/__patch_details_cb //apple_ref/c/intfcm/__patch_details_cb //apple_ref/c/func/__patch_details_cb //apple_ref/c/ftmplt/__patch_details_cb //apple_ref/c/defn/__patch_details_cb //apple_ref/c/macro/__patch_details_cb" --><font class="function">__patch_details_cb</font><!-- /a -->)(
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> *<font class="param">addr</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">name</font>,
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> *<font class="param">info</font>); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl><dt><code>addr</code></dt><dd>The arch-specific address of the function to patch.</dd>
+<dt><code>name</code></dt><dd>The name of the patch function exported by the bundle.</dd>
+<dt><code>info</code></dt><dd>An info value, supplied to the patch bundle by the caller.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>The patch bundle will be given a pointer to a function
+with this prototype. It should call this function with the
+details of any functions it wishes to patch in the target
+process.
+</p>
+</dl>
+<hr><!-- headerDoc=tdef;  uid=//apple_ref/doc/compositePage/c/tdef/patch_link_fn_t;  name=patch_link_fn_t -->
+<a name="//apple_ref/doc/compositePage/c/tdef/patch_link_fn_t"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="patch_link_fn_t">patch_link_fn_t</a></h3>
+</td></tr></table><hr><dl></dl><p>Implemented by a Rosetta bundle to link to reentry islands.
+</p>
+<blockquote><pre><font class="keyword">typedef</font> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> (*<!-- a logicalPath="//apple_ref/c/instm/patch_link_fn_t //apple_ref/c/clm/patch_link_fn_t //apple_ref/c/intfcm/patch_link_fn_t //apple_ref/c/func/patch_link_fn_t //apple_ref/c/ftmplt/patch_link_fn_t //apple_ref/c/defn/patch_link_fn_t //apple_ref/c/macro/patch_link_fn_t" --><font class="function">patch_link_fn_t</font><!-- /a -->)(
+    <!-- a logicalPath="//apple_ref/c/cl/patch_lookup_fn_t //apple_ref/c/cl/patch_lookup_fn_t //apple_ref/c/tdef/patch_lookup_fn_t //apple_ref/c/tag/patch_lookup_fn_t //apple_ref/c/econst/patch_lookup_fn_t //apple_ref/c/struct/patch_lookup_fn_t //apple_ref/c/clconst/patch_lookup_fn_t" --><font class="type">patch_lookup_fn_t</font><!-- /a --> <font class="param">fn</font>,
+    <font class="keyword">const</font> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/econst/char //apple_ref/c/struct/char //apple_ref/c/clconst/char" --><font class="type">char</font><!-- /a --> *<font class="param">exec_path</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl><dt><code>fn</code></dt><dd>A <!-- a logicalPath="//apple_ref/c/tdef/patch_lookup_fn_t" -->callback <!-- /a --> to retrieve
+reentry addresses.</dd>
+<dt><code>exec_path</code></dt><dd>The path to this bundle's executable file.</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This function is implemented by the Rosetta patch bundle,
+and is called to give it the opportunity to link its re-entry
+function pointers; it is called when the bundle is first
+loaded into the target application's address space. It is
+given a <!-- a logicalPath="//apple_ref/c/tdef/patch_lookup_fn_t" -->callback <!-- /a --> to use when
+requesting these addresses, and is given its own executable
+path (within its bundle), such that it can recreate the
+CFBundleRef it would be passed in the native patching
+environment if so desired.
+</p>
+</dl>
+<hr><!-- headerDoc=tdef;  uid=//apple_ref/doc/compositePage/c/tdef/patch_lookup_fn_t;  name=patch_lookup_fn_t -->
+<a name="//apple_ref/doc/compositePage/c/tdef/patch_lookup_fn_t"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="patch_lookup_fn_t">patch_lookup_fn_t</a></h3>
+</td></tr></table><hr><dl></dl><p>Callback used by a rosetta bundle to get reentry addresses.
+</p>
+<blockquote><pre><font class="keyword">typedef</font> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> <font class="type">*</font> (*<!-- a logicalPath="//apple_ref/c/instm/patch_lookup_fn_t //apple_ref/c/clm/patch_lookup_fn_t //apple_ref/c/intfcm/patch_lookup_fn_t //apple_ref/c/func/patch_lookup_fn_t //apple_ref/c/ftmplt/patch_lookup_fn_t //apple_ref/c/defn/patch_lookup_fn_t //apple_ref/c/macro/patch_lookup_fn_t" --><font class="function">patch_lookup_fn_t</font><!-- /a -->)(
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/econst/void //apple_ref/c/struct/void //apple_ref/c/clconst/void" --><font class="type">void</font><!-- /a --> *<font class="param">patched_fn_addr</font> ); </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Parameter Descriptions</font></h5>
+<blockquote>
+<dl><dt><code>patched_fn_addr</code></dt><dd>The address of the target function.</dd>
+</dl>
+</blockquote>
+<dl><dt><i> result</i></dt><dd>The re-entry address normally returned from
+<!-- a logicalPath="//apple_ref/c/func/DPCreatePatch" -->DPCreatePatch <!-- /a -->.
+ </dd>
+<h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>A pointer to a function matching this prototype is passed
+into the <!-- a logicalPath="//apple_ref/c/tdef/patch_link_fn_t" -->patch_link_fn_t <!-- /a -->
+implemented by the Rosetta patch bundle.
+</p>
+</dl>
+<h2>#defines</h2>
+<hr><!-- headerDoc=macro;  uid=//apple_ref/doc/compositePage/c/macro/kGetPatchDetailsFunctionName;  name=kGetPatchDetailsFunctionName -->
+<a name="//apple_ref/doc/compositePage/c/macro/kGetPatchDetailsFunctionName"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="kGetPatchDetailsFunctionName">kGetPatchDetailsFunctionName</a></h3>
+</td></tr></table><hr><dl></dl><p>The name of the Rosetta 'Get Patch Details' function.</p>
+<blockquote><pre>#define <!-- a logicalPath="//apple_ref/c/cl/kGetPatchDetailsFunctionName //apple_ref/c/cl/kGetPatchDetailsFunctionName //apple_ref/c/tdef/kGetPatchDetailsFunctionName //apple_ref/c/tag/kGetPatchDetailsFunctionName //apple_ref/c/econst/kGetPatchDetailsFunctionName //apple_ref/c/struct/kGetPatchDetailsFunctionName //apple_ref/c/clconst/kGetPatchDetailsFunctionName" --><font class="type">kGetPatchDetailsFunctionName</font><!-- /a --> "<!-- a logicalPath="//apple_ref/c/cl/GetPatchDetails //apple_ref/c/cl/GetPatchDetails //apple_ref/c/tdef/GetPatchDetails //apple_ref/c/tag/GetPatchDetails //apple_ref/c/econst/GetPatchDetails //apple_ref/c/struct/GetPatchDetails //apple_ref/c/clconst/GetPatchDetails" --><font class="type">GetPatchDetails</font><!-- /a -->" </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>As with <code>kStartFunctionName</code>, this is currently
+hard-coded, but can be read from a bundle's info.plist with a
+few changes to the code.
+ </p>
+</dl>
+<hr><!-- headerDoc=macro;  uid=//apple_ref/doc/compositePage/c/macro/kLinkPatchBundleSymbolName;  name=kLinkPatchBundleSymbolName -->
+<a name="//apple_ref/doc/compositePage/c/macro/kLinkPatchBundleSymbolName"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="kLinkPatchBundleSymbolName">kLinkPatchBundleSymbolName</a></h3>
+</td></tr></table><hr><dl></dl><p>The assembler-style symbol name of the 'Link Patches' function.</p>
+<blockquote><pre>#define <!-- a logicalPath="//apple_ref/c/cl/kLinkPatchBundleSymbolName //apple_ref/c/cl/kLinkPatchBundleSymbolName //apple_ref/c/tdef/kLinkPatchBundleSymbolName //apple_ref/c/tag/kLinkPatchBundleSymbolName //apple_ref/c/econst/kLinkPatchBundleSymbolName //apple_ref/c/struct/kLinkPatchBundleSymbolName //apple_ref/c/clconst/kLinkPatchBundleSymbolName" --><font class="type">kLinkPatchBundleSymbolName</font><!-- /a --> "<!-- a logicalPath="//apple_ref/c/cl/_LinkPatches //apple_ref/c/cl/_LinkPatches //apple_ref/c/tdef/_LinkPatches //apple_ref/c/tag/_LinkPatches //apple_ref/c/econst/_LinkPatches //apple_ref/c/struct/_LinkPatches //apple_ref/c/clconst/_LinkPatches" --><font class="type">_LinkPatches</font><!-- /a -->" </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This is an actual assembler symbol name, because unlike
+the others, passed to <code>CFBundleGetAddressOfSymbol()</code>,
+this one is passed to <code>NSLookupSymbolInModule</code>,
+which requires the leading underscore to be included.
+ </p>
+</dl>
+<hr><!-- headerDoc=macro;  uid=//apple_ref/doc/compositePage/c/macro/kStartFunctionName;  name=kStartFunctionName -->
+<a name="//apple_ref/doc/compositePage/c/macro/kStartFunctionName"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="kStartFunctionName">kStartFunctionName</a></h3>
+</td></tr></table><hr><dl></dl><p>The name of the bundle startup function. </p>
+<blockquote><pre>#define <!-- a logicalPath="//apple_ref/c/cl/kStartFunctionName //apple_ref/c/cl/kStartFunctionName //apple_ref/c/tdef/kStartFunctionName //apple_ref/c/tag/kStartFunctionName //apple_ref/c/econst/kStartFunctionName //apple_ref/c/struct/kStartFunctionName //apple_ref/c/clconst/kStartFunctionName" --><font class="type">kStartFunctionName</font><!-- /a --> "<!-- a logicalPath="//apple_ref/c/cl/PatchMain //apple_ref/c/cl/PatchMain //apple_ref/c/tdef/PatchMain //apple_ref/c/tag/PatchMain //apple_ref/c/econst/PatchMain //apple_ref/c/struct/PatchMain //apple_ref/c/clconst/PatchMain" --><font class="type">PatchMain</font><!-- /a -->" </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>This is a hard-coded value at present, but you could
+always have the name read from the bundle's Info.plist
+if you wanted. That would need a change to the underlying
+code.
+ </p>
+</dl>
+<hr><!-- headerDoc=macro;  uid=//apple_ref/doc/compositePage/c/macro/kWillPatchFunctionName;  name=kWillPatchFunctionName -->
+<a name="//apple_ref/doc/compositePage/c/macro/kWillPatchFunctionName"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="kWillPatchFunctionName">kWillPatchFunctionName</a></h3>
+</td></tr></table><hr><dl></dl><p>The name of the Rosetta 'Will Patch Application' function.</p>
+<blockquote><pre>#define <!-- a logicalPath="//apple_ref/c/cl/kWillPatchFunctionName //apple_ref/c/cl/kWillPatchFunctionName //apple_ref/c/tdef/kWillPatchFunctionName //apple_ref/c/tag/kWillPatchFunctionName //apple_ref/c/econst/kWillPatchFunctionName //apple_ref/c/struct/kWillPatchFunctionName //apple_ref/c/clconst/kWillPatchFunctionName" --><font class="type">kWillPatchFunctionName</font><!-- /a --> "<!-- a logicalPath="//apple_ref/c/cl/WillPatchApplication //apple_ref/c/cl/WillPatchApplication //apple_ref/c/tdef/WillPatchApplication //apple_ref/c/tag/WillPatchApplication //apple_ref/c/econst/WillPatchApplication //apple_ref/c/struct/WillPatchApplication //apple_ref/c/clconst/WillPatchApplication" --><font class="type">WillPatchApplication</font><!-- /a -->" </pre></blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>As with <code>kStartFunctionName</code>, this is currently
+hard-coded, but can be read from a bundle's info.plist with a
+few changes to the code.
+ </p>
+</dl>
+<p><p>&#169; 2003-2006 Jim Dovey. Some Rights Reserved.
+ (Last Updated November 06, 2006)
+</p></body></html>

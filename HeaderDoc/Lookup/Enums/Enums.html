@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html><head>
+    <title>Enumerations</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <meta name="generator" content="HeaderDoc">
+<style type="text/css"><!--a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;}--></style></head><body bgcolor="#ffffff">
+<h1><font face="Geneva,Arial,Helvtica">Enumerations</font></h1><br>
+<hr><!-- headerDoc=tag;  uid=//apple_ref/c/tag/Platform%32Architecture%32Constants;  name=PlatformArchitectureConstants -->
+<a name="//apple_ref/c/tag/Platform%32Architecture%32Constants"></a>
+<table border="0"  cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5"><h3><a name="Platform%32Architecture%32Constants">Platform Architecture Constants</a></h3>
+</td></tr></table><hr><dl></dl><blockquote><pre><font class="keyword">enum</font> { 
+    <!-- a logicalPath="//apple_ref/c/cl/kInsertionArchPPC //apple_ref/c/cl/kInsertionArchPPC //apple_ref/c/tdef/kInsertionArchPPC //apple_ref/c/tag/kInsertionArchPPC //apple_ref/c/econst/kInsertionArchPPC //apple_ref/c/struct/kInsertionArchPPC //apple_ref/c/clconst/kInsertionArchPPC" --><font class="type">kInsertionArchPPC</font><!-- /a --> = <font class="number">0</font>, 
+    <!-- a logicalPath="//apple_ref/c/cl/kInsertionArchIA32 //apple_ref/c/cl/kInsertionArchIA32 //apple_ref/c/tdef/kInsertionArchIA32 //apple_ref/c/tag/kInsertionArchIA32 //apple_ref/c/econst/kInsertionArchIA32 //apple_ref/c/struct/kInsertionArchIA32 //apple_ref/c/clconst/kInsertionArchIA32" --><font class="type">kInsertionArchIA32</font><!-- /a --> = <font class="number">1</font>  
+}; </pre></blockquote>
+<h5><font face="Lucida Grande,Helvetica,Arial">Constants</font></h5>
+<blockquote>
+<dl>
+<dt><a name="//apple_ref/c/econst/kInsertionArchPPC"><code>kInsertionArchPPC</code></a></dt><dd>PowerPC architecture</dd>
+<dt><a name="//apple_ref/c/econst/kInsertionArchIA32"><code>kInsertionArchIA32</code></a></dt><dd>IA-32 (i386+) architecture</dd>
+</dl>
+</blockquote>
+<dl><h5><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5><p>These constants are mostly used when 
+injecting PPC code into a Rosetta process. However, those functions
+also require cross-architecture function address lookups for finding
+PPC addresses from Intel code. As such, the constans are defined here
+and are passed to
+<!-- a logicalPath="//apple_ref/c/func/FindFunctionForArchitecture" -->FindFunctionForArchitecture <!-- /a -->
+to enable those lookups.
+ </p>
+</dl>
+<p><p>&#169; 2003-2006 Jim Dovey. Some Rights Reserved.
+ (Last Updated November 06, 2006)
+</p></body></html>
