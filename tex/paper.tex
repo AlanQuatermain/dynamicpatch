@@ -6,15 +6,36 @@
 \usepackage[parfill]{parskip}	% begin paragraphs with an empty line
 \usepackage{geometry}
 \geometry{letterpaper}
-%\usepackage{times}
 \usepackage{babel}
 \usepackage{float}
-%\usepackage{moreverb}		% for line-numbered listings
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+\definecolor{listinggray}{gray}{0.9}
+\definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
 
-% float style for code snippets
-\floatstyle{ruled}
-\newfloat{sourcecode}{thp}{lop}
-\floatname{sourcecode}{Example}
+\lstset{	% set listings package parameters
+	backgroundcolor=\color{lbcolor},
+	tabsize=4,
+	rulecolor=,
+	basicstyle=\small,
+	upquote=true,
+	aboveskip={1.5\baselineskip},
+	columns=fixed,
+	extendedchars=true,
+	keywordstyle=\bfseries\ttfamily\color[rgb]{0,0,1},
+	identifierstyle=\ttfamily,
+	stringstyle=\color[rgb]{0.627,0.126,0.941},
+	commentstyle=\color[rgb]{0.133,0.545,0.133},
+	mathescape=true,
+	prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+	breakindent=5pt,
+	breaklines,
+	frame=single,
+	numbers=left,
+	stepnumber=1,
+	numbersep=10pt,
+	language=[Objective]C}
 
 \begin{document}
 
@@ -32,8 +53,7 @@ Patching (or \emph{overriding}) functions at run-time on Mac OS X has already be
 \subsection{Branch Islands}
 The patching procedure itself works in the same general manner, except that in this implementation, we use registers 11 \& 12 to setup the branch target, and we encode the address into memory, rather than directly into the instructions. We also add another address to use as an error handler. \textbf{Example~\ref{ppcBranchIsland}} shows the code for this block.
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[caption=Both branch islands on PowerPC are based on this template, label=ppcBranchIsland]
 static unsigned int branch_template[] = {
 // block_addr:
     0x00000000,     // .long    branch_target_addr
@@ -50,10 +70,7 @@ static unsigned int branch_template[] = {
     0x7D8903A6,     // mtctr    r12
     0x4E800420      // bctr
 };
-\end{verbatim}
-\caption{Both branch islands on PowerPC are based on this template.}
-\label{ppcBranchIsland}
-\end{sourcecode}
+\end{lstlisting}
 
 The reason we use registers 11 and 12 is to match the behaviour of other dynamic branches such as C++ virtual function calls, and Objective-C message calls, both of which load the address into r12 before moving it to the count register. Since these are considered volatile during function calls (i.e. not likely to be preserved by the called function) their use is acceptable.
 
@@ -64,8 +81,7 @@ Also in here we replace the two no-op instructions. The first one decrements the
 
 On Intel, the code works in a similar manner, although two different templates are used, due to the potentially large number of instructions to save in the reentry island (see \textbf{Examples~\ref{intelBranchIsland}~\&~\ref{intelReentryIsland}}).
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label=intelBranchIsland, caption=The IA-32 branch-to-patch island template.]
 static unsigned char patch_template[] = {
 // .template:
     0x00,0x00,0x00,0x00,            // .long branch_target
@@ -78,13 +94,9 @@ static unsigned char patch_template[] = {
 // .branch:
     0xFF,0xE0                       // jmp  *%eax
 };
-\end{verbatim}
-\caption{The IA-32 branch-to-patch island template.}
-\label{intelBranchIsland}
-\end{sourcecode}
+\end{lstlisting}
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label=intelReentryIsland, caption=The two components of the IA-32 reentry island template.]
 static unsigned char reentry_template_start[] = {
 // .template:
     0x00,0x00,0x00,0x00,            // .long branch_target
@@ -104,34 +116,27 @@ static unsigned char reentry_template_end[]  = {
 // .branch:
     0xFF,0xE0                       // jmp  *%eax
 };
-\end{verbatim}
-\caption{The two components of the IA-32 reentry island template.}
-\label{intelReentryIsland}
-\end{sourcecode}
+\end{lstlisting}
 
 Here we use eax \& edx to load the branch target. It's also worth noting that the last byte of \texttt{reentry\_template\_start} contains the number of bytes of saved instructions that follow. This is used in the \texttt{RemovePatch} function to copy those bytes back into the original function.
 
 \subsection{Atomic Operations}
 On PowerPC, we have an easy time with regard to rewriting instructions, as all instructions are 32-bits long. We can also implement a compare-and-swap routine to swap around two 32-bit values, as shown in \textbf{Example~\ref{ppcCAS}}.
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label= ppcCAS, caption=PowerPC \texttt{CompareAndSwap()} routine.]
 .cas_retry:
-    lwarx   r6, 0, r5           ; locked load value
-    cmpw    r6, r3              ; compare with 'oldVal'
-    bne-    .cas_fail           ; end if not equal
-    stwcx.  r4, 0, r5           ; try to store 'newVal'
-    bne-    .cas_retry          ; if store failed, retry
-    isync                       ; sync instruction cache
-    li      r3, 1               ; return 1 on success
+    lwarx   r6, 0, r5           // locked load value
+    cmpw    r6, r3              // compare with 'oldVal'
+    bne-    .cas_fail           // end if not equal
+    stwcx.  r4, 0, r5           // try to store 'newVal'
+    bne-    .cas_retry          // if store failed, retry
+    isync                       // sync instruction cache
+    li      r3, 1               // return 1 on success
     blr
 .cas_fail:
-    li      r3, 0               ; return 0 on failure
+    li      r3, 0               // return 0 on failure
     blr
-\end{verbatim}
-\caption{PowerPC \texttt{CompareAndSwap()} routine.}
-\label{ppcCAS}
-\end{sourcecode}
+\end{lstlisting}
 
 This will check if the value at the given address is the same as expected, and will write out the new value if this proves to be the case. In the event that the operation cannot be performed atomically, the store instruction will fail, and the code will loop and retry. It returns 1 if the value was written and 0 if the caller should re-read the 'old' value again.
 
@@ -140,8 +145,7 @@ On Intel, the same effect can be gained through the use of the \texttt{cmpxchgl}
 \subsection{Patch Removal}
 In the event that patches need to be removed, each architecture has its own removal function. These will start at the target function, follow its branch instruction to the branch-to-patch island, read the address of the re-entry island from there, and will read the saved instructions from that block of code. In the case of the PowerPC patches, this is just a 32-bit value read from a definite offset (see \textbf{Example~\ref{ppcRemPatch}}). On Intel, we have to read the one-byte size value first, then read that many bytes (\textbf{Example~\ref{intelRemPatch}}).
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label=ppcRemPatch, caption=PowerPC patch removal algorithm.]
 // see if this is a branch absolute
 if ( (instr & 0xFE000003) == 0x4A000002)
 {
@@ -161,13 +165,9 @@ if ( (instr & 0xFE000003) == 0x4A000002)
 
     DPCodeSync( fn_addr );
 }
-\end{verbatim}
-\caption{PowerPC patch removal algorithm.}
-\label{ppcRemPatch}
-\end{sourcecode}
+\end{lstlisting}
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label= intelRemPatch, caption=Intel patch removal algorithm.]
 // If instruction begins with 0xE9 it's a jump
 if ( *((unsigned char *) fn_addr) == 0xE9 )
 {
@@ -188,10 +188,7 @@ if ( *((unsigned char *) fn_addr) == 0xE9 )
 
     DPCodeSync( fn_addr );
 }
-\end{verbatim}
-\caption{Intel patch removal algorithm}
-\label{intelRemPatch}
-\end{sourcecode}
+\end{lstlisting}
 
 \section{Code Injection}
 
@@ -200,8 +197,7 @@ Injection is implemented here by using a pre-compiled chunk of standard code. Th
 \subsection{Entry point and arguments}
 In this case, then, injection is merely the means to call code inside the framework, which handles the duties of enumerating and loading these bundles. The injected code reflects that. It includes two functions, an initial function designed to setup a mostly stable operating environment, and which then creates a proper pthread to run the other. These take a large structure as an argument, which contains function pointers and storage, illustrated in \textbf{Example~\ref{newthreadArgs}}.
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label=newthreadArgs, caption=Injected code parameter block.]
 typedef struct __newthread_args
 {
     ___pthread_set_self_fn      setSelfFn;
@@ -225,10 +221,7 @@ typedef struct __newthread_args
     pthread_attr_t              fakeAttrs;
 
 } newthread_args_t;
-\end{verbatim}
-\caption{Injected code parameter block}
-\label{newthreadArgs}
-\end{sourcecode}
+\end{lstlisting}
 
 Firstly there are some function pointers. These are all initialized to the addresses of several function within the System library, which loads at a static address (0x90000000), and which loads directly after the program binary; as such, there is very little chance that it would be relocated.
 
@@ -241,17 +234,13 @@ The injecting process itself is less involved: it uses the mach kernel routines 
 \subsection{Patch Bundles}
 The patch bundles themselves would implement a single function, as shown in \textbf{Example~\ref{patchMain}}.
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label= patchMain, caption=Patch bundle native entry code.]
 int PatchMain( CFBundleRef myBundle )
 {
 	// do stuff ...
 	return (1);
 }
-\end{verbatim}
-\caption{Patch bundle native entry code}
-\label{patchMain}
-\end{sourcecode}
+\end{lstlisting}
 
 They can return 1 if they want to stay resident in memory, or optionally can return zero to be unloaded (if they decided not to patch anything, or if they encountered an error that prevented their continuation). Normally, the bundle would call \texttt{DPCreatePatch} to patch some functions, but that's not technically necessary: one of the included examples simply puts up an alert dialog.
 
@@ -323,30 +312,22 @@ Rather than mess about handing linked lists or other such structures into the pa
 
 Here, we end up with the prototypes shown in \textbf{Example~\ref{rosettaInjectProtos}}.
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label= rosettaInjectProtos, caption=Rosetta entry point prototypes.]
 typedef void (*__patch_details_cb)(void * target_addr, 
             const char * patch_fn_name, void * info);
 int WillPatchApplication( CFBundleRef myBundle, 
             pid_t app_pid, const char * app_name );
 int GetPatchDetails( __patch_details_cb cb,
              int target_arch, void * info );
-\end{verbatim}
-\caption{Rosetta entry point prototypes}
-\label{rosettaInjectProtos}
-\end{sourcecode}
+\end{lstlisting}
 
 The last function, to get the reentry addresses, will also use a callback. We don't want to restrict the patch bundle to only having the reentry address for each patch applied as corresponding patch is called: they should all be set up before the patch bundle receives any patch calls whatsoever. As such, we use a callback function, which will look through the data tables for a target function address, and will return the corresponding reentry address. Also, since this function is to be called when the bundle first loads into the target process, and can therefore be considered a good place for initialisation of other things, we pass the bundle its own executable path, from which it can (if it so chooses) infer its bundle path, and recreate the CFBundleRef it would normally receive in \texttt{PatchMain}. These are shown in \textbf{Example~\ref{rosettaLinkProtos}}.
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label= rosettaLinkProtos, caption=Rosetta linkage functions]
 typedef void * (*patch_lookup_fn_t)(void * patched_fn_addr);
 void LinkPatches( patch_lookup_fn_t cb, 
             const char * exec_path );
-\end{verbatim}
-\caption{Rosetta linkage functions}
-\label{rosettaLinkProtos}
-\end{sourcecode}
+\end{lstlisting}
 
 \subsubsection{Patch Info Data Table}
 The details necessary to load the patch bundle and both link to the patch handler function within, and to give reentry code back out, involves three things: the reentry address, the path to the bundle executable, and the address of the patch function (relative to the base address of the bundle).
@@ -355,8 +336,7 @@ The second item here is problematic; from a pure-structure point of view, we wan
 
 This gives us the structure shown in \textbf{Example~\ref{infoTableEntry}}.
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label= infoTableEntry, caption=Rosetta info table entry structure.]
 struct rosetta_info_table_entry
 {
     // address of branch-to-original block
@@ -370,16 +350,12 @@ struct rosetta_info_table_entry
     // offset of the patch function within its file image
     unsigned patch_fn_offset;
 };
-\end{verbatim}
-\caption{Rosetta info table entry structure}
-\label{infoTableEntry}
-\end{sourcecode}
+\end{lstlisting}
 
 \subsubsection{Branch Installation Table}
 The branch installation table is very simple, since each element just contains two 32-bit values, an address and an instruction (see \textbf{Example~\ref{branchTableEntry}}). The instruction needs to be stored in big-endian format, however, while the address needs to remain little-endian.
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label=branchTableEntry, caption=Branch table element structure.]
 // this holds everything used by the injected routine in 
 // a rosetta application: what to write, and where. 
 // Everything else has been done already 
@@ -389,18 +365,14 @@ typedef struct _patch_entry_struct
     vm_address_t    fn_addr;
     natural_t       ba_instr;
 } patch_entry_t;
-\end{verbatim}
-\caption{Branch table element structure}
-\label{branchTableEntry}
-\end{sourcecode}
+\end{lstlisting}
 
 \subsubsection{Copying Into Target Process}
 The copy part comes once everything else has been done. Once we've enumerated all the patch bundles, we will have built the jump tables and the data tables locally, and we will also have allocated the space for these inside the target process (the branch islands need to know one another's addresses, as do the patch info table entries). At this point, we can simply copy the blocks, one by one, into the target process. We then make them executable using \texttt{vm\_protect}.
 
 However, we need a little more information than this alone. We need the assembly stub function itself, and we also need book-keeping information, such as the locations of the various tables, which we will need to deallocate later. Because of this, the patch data table begins with a header structure, which contains not only these addresses and their corresponding sizes, but also the offsets used to reach the patch info table and the string table, storage for the C-style name of the stub binding function proper (passed to \texttt{dlsym}), and the stub helper code itself. This is illustrated in \textbf{Example~\ref{dataTableHeader}}.
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label= dataTableHeader, caption=Rosetta data table header structure.]
 struct rosetta_data_table_header
 {
     // length of data table (will be multiple of page-size)
@@ -442,10 +414,7 @@ struct rosetta_data_table_header
     // void * table_addr;           // address of this header
     unsigned char stub_helper_interface[1]; // actually larger
 };
-\end{verbatim}
-\caption{Rosetta data table header structure}
-\label{dataTableHeader}
-\end{sourcecode}
+\end{lstlisting}
 
 At the start of the stub helper interface code there is another block of variables, including precomputed function addresses. These are both implemented in \texttt{libSystem}, which should load at the same address in memory within every application. These variables are all used directly by the stub helper code, which is why they're part of the assembly block there.
 
@@ -472,8 +441,7 @@ The next part uses a standard i386 thread injection process to apply a small blo
 
 The C version of the code is shown in \textbf{Example~\ref{rosettaInjectCodeC}}.
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label= rosettaInjectCodeC, caption=Injected code\, C implementation]
 struct _r_args
 {
     unsigned int *  addr;
@@ -495,18 +463,14 @@ void RosettaPatchInstaller( struct _r_args *args,
     *((unsigned char *) flag_byte_addr) = 0xFF;
     while ( 1 );
 }
-\end{verbatim}
-\caption{Injected code, C implementation}
-\label{rosettaInjectCodeC}
-\end{sourcecode}
+\end{lstlisting}
 
 It takes three arguments, the last of which is used to signal completion to the injector process. The assembler code puts a one byte of zero at the start of the code block, and it is this that gets set to 0xFF at the end of the function. The reason for this is that the Intel implementation of the thread\_terminate() function within \textsl{translate} is not listed in the symbol table, so we point this code towards it to stop itself. As such, the injector will watch the code block, and when the first byte is set nonzero it will terminate the thread remotely.
 
 \subsubsection{Patch Binding at First Call}
 As with the Intel patch code, there are two different templates for the branch islands under the Rosetta injection process. The reentry island is functionally identical to the standard one, with the exception that the modification of r12 is now explicitly coded, since it will always be used. The patch island is a little different since it needs to both store an extra variable at its head and needs to pull data into a couple more registers, ready to pass onto the stub handler interface (see \textbf{Example~\ref{rosettaPatchIsland}}). Note that these arrays are implemented as byte-arrays, since they need to be identical on both big- and little-endian processors.
 
-\begin{sourcecode}
-\begin{verbatim}
+\begin{lstlisting}[label= rosettaPatchIsland, caption=Rosetta branch-to-patch island template.]
 static unsigned char rosetta_patch_template[] =
 {
     0x00,0x00,0x00,0x00,    // .long    branch_target_addr
@@ -524,10 +488,7 @@ static unsigned char rosetta_patch_template[] =
     0x7D,0x89,0x03,0xA6,    // mtctr    r12
     0x4E,0x80,0x04,0x20     // bctr
 };
-\end{verbatim}
-\caption{Rosetta branch-to-patch island template}
-\label{rosettaPatchIsland}
-\end{sourcecode}
+\end{lstlisting}
 
 The first time a patch function is called, it will find its way to the assembly stub function. This is split into two parts: the binder interface and the linker function. The code above leads into the binder interface, which first of all stores all parameter registers on a new stack frame. It then loads the address of its globals table (described at the end of the data table header section above) and checks the value of the \texttt{fmwk\_ok} value. If this is zero, it calls the linker function. This one stores r13 and r14 on the stack, since it'll make function calls itself, and uses the data in the other members of the globals table to call \texttt{NSAddImage} and \texttt{dlsym}, each time passing a string whose address is also gleaned from the globals table. The address returned by \texttt{dlsym} is written into the globals table, and the \texttt{fmwk\_ok} value is set to 1 to indicate that the framework has been loaded. This function restores r13 \& r14 before returning to the stub interface function.
 
